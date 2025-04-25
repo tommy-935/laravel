@@ -19,4 +19,9 @@ class SoftToken extends Model
     public function softTokenActive(){
         return $this->hasOne(SoftTokenActive::class, 'soft_token_id', 'id');
     }
+
+    public function Order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 }

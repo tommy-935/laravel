@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,12 +37,15 @@ Route::get('products/{slug}', 'App\Http\Controllers\ProductController@get');
 
 Route::post('/create-payment-intent', [StripePaymentController::class, 'createPaymentIntent']);
 
+Route::post('verify/license', 'App\Http\Controllers\Api\LicenseController@verify');
+
 
 Route::middleware(['auth:sanctum'])->group(function () {
     
     // Route::post('/categories', [CategoryController::class, 'addToCart'])->name('cart.add');
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('orders', OrderController::class);
 
     Route::post('/attachments', [AttachmentController::class, 'store']);
 

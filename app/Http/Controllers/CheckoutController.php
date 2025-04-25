@@ -58,6 +58,16 @@ class CheckoutController extends Controller
         }
     }
 
+    public function getCheckoutOrderInfo(Request $request)
+    {
+        $data = Order::getCheckoutOrderInfo($request->key);
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+
     protected function createOrder(Request $request)
     {
 
@@ -76,11 +86,11 @@ class CheckoutController extends Controller
         DB::beginTransaction(function() use ($request, $total, $uid, &$order, $cartItems) {
             $billing_address = $request->billing_address;
             $shipping_address = $request->shipping_address;
-
+            $order_key = Str::random(32);
+            $expired_at = '2999-12-31 00:00:00';
             $order = Order::create([
                 'order_num' => 'NUM-' . Str::upper(Str::random(10)),
-                'paid_date' => null,
-                'paid_type' => $request->payment_method,
+                'order_key' => $order_key,
                 'status' => 'pending',
                 'created_by' => $uid,
                 'updated_by' => $uid,
@@ -127,6 +137,16 @@ class CheckoutController extends Controller
                 'shipping_country' => $shipping_address['country'],
                 'shipping_phone' => $shipping_address['phone'],
                 'shipping_zip_code' => $shipping_address['phone'],
+            ]);
+
+            $token = Str::random(32);
+            $order->softToken()->create([
+                'token' => $token,
+                'expired_at' => $expired_at,
+                'created_by' => $uid,
+                'updated_by' => $uid,
+                'website_num' => 1,
+                'email' => $shipping_address['email'],
             ]);
         });
         
@@ -203,7 +223,7 @@ class CheckoutController extends Controller
                     'product_data' => [
                         'name' => 'Order #' . $order->order_num,
                     ],
-                    'unit_amount' => $order->total_amount * 100,
+                    'unit_amount' => $order->orderPrice->total * 100,
                 ],
                 'quantity' => 1,
             ]],
@@ -257,8 +277,8 @@ class CheckoutController extends Controller
     protected function successFul(Order $order)
     {
         // token
-        $token = $this->genToken($order);
-        $order->token = $token;
+        // $token = $this->genToken($order);
+        // $order->token = $token;
         // mail
         Mail::to($order->orderUser->shipping_email)->send(new PaymentSuccessful($order));
 

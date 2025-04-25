@@ -180,9 +180,8 @@ drop table if exists tb_order;
 create table tb_order(
 	id int(11) not null auto_increment,
 	`order_num` varchar(25) not null default "",
-	`paid_date` datetime default null,
-	paid_type varchar(12) not null default "" comment "wechatpay | alipay | paypal",
-	order_status varchar(12) not null default 0 comment "1.pending 2.processing 3. completed 4. failed 5. canceled 6. refunded",
+	`order_key` varchar(32) not null default "",
+	`order_status` varchar(12) not null default 0 comment "1.pending 2.processing 3. completed 4. failed 5. canceled 6. refunded",
 	
 	created_by int(11) not null default 0,
 	created_at datetime default null,
@@ -196,9 +195,8 @@ drop table if exists tb_order_payment;
 create table tb_order_payment(
 	id int(11) not null auto_increment,
 	order_id int(11) not null default 0,
-	`order_num` varchar(25) not null default "",
 	`paid_date` datetime default null,
-	payment_method varchar(12) not null default "" comment "wechatpay | alipay | paypal | stripe",
+	`payment_method` varchar(12) not null default "" comment "wechatpay | alipay | paypal | stripe",
 	`status` tinyint(1) not null default 0 comment "payment status",
 	`amount` varchar(6) not null default "",
 	`currency` varchar(6) not null default "USD",
@@ -330,6 +328,8 @@ create table tb_soft_token(
 	`user_id` int(11) not null default 0,
 	`email` varchar(60) not null default "",
 	`token` varchar(60) not null default "",
+	`order_id` int(11) not null default 0,
+	`soft_name` varchar(60) not null default "",
 	`website_num` int(11) not null default 1,
 	`expired_at` datetime default null,
 
@@ -344,7 +344,7 @@ create table tb_soft_token(
 drop table if exists tb_soft_token_active;
 create table tb_soft_token_active(
 	id int(11) not null auto_increment,
-	`token_id` int(11) not null default 0,
+	`soft_token_id` int(11) not null default 0,
 	`website` varchar(60) not null default "",
 	`actived_at` datetime default null,
 	`ip` varchar(60) not null default "",

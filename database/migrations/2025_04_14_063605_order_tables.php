@@ -69,8 +69,8 @@ return new class extends Migration
         Schema::create('order', function (Blueprint $table) {
             $table->id();  // Auto-incrementing id field
             $table->string('order_num', 25)->default('');  // order_num field
-            $table->dateTime('paid_date')->nullable();  // paid_date field
-            $table->string('paid_type', 12)->default('')->comment('wechatpay | alipay | paypal');  // paid_type field
+            $table->string('order_key', 32)->default('');  // order_num field
+
             $table->string('status', 12)->default('');  // order_status field
 
             $table->integer('created_by')->default(0);  // created_by field
@@ -97,6 +97,36 @@ return new class extends Migration
 
             $table->integer('updated_by')->default(0);  // updated_by field
         });
+
+        Schema::create('soft_token', function (Blueprint $table) {
+            $table->id();  // Auto-incrementing id field
+            $table->integer('order_id')->default(0);  // order_id field
+            $table->integer('user_id')->default(0);
+            $table->string('email', 25)->default('');  // order_num field
+            $table->string('token', 32)->default('');  
+            $table->string('soft_name', 25)->default('');  // amount field
+            $table->integer('website_num')->default(0);
+            $table->dateTime('expired_at')->nullable();
+
+            $table->integer('created_by')->default(0);  // created_by field
+            $table->timestamps(0);  // created_at and updated_at timestamps
+
+            $table->integer('updated_by')->default(0);  // updated_by field
+        });
+
+        Schema::create('soft_token_active', function (Blueprint $table) {
+            $table->id();  // Auto-incrementing id field
+            $table->integer('soft_token_id')->default(0);  // order_id field
+            $table->string('website', 25)->default('');  // order_num field
+            $table->string('user_agent', 255)->default('');  
+            $table->string('ip', 32)->default('');  // amount field
+            $table->dateTime('actived_at')->nullable();
+
+            $table->integer('created_by')->default(0);  // created_by field
+            $table->timestamps(0);  // created_at and updated_at timestamps
+
+            $table->integer('updated_by')->default(0);  // updated_by field
+        });
     }
 
     /**
@@ -109,5 +139,7 @@ return new class extends Migration
         Schema::dropIfExists('order_user');
         Schema::dropIfExists('order_product');
         Schema::dropIfExists('order_price');
+        Schema::dropIfExists('soft_token');
+        Schema::dropIfExists('soft_token_active');
     }
 };

@@ -5,7 +5,7 @@ Hello {{ $order->orderUser->shipping_last_name }},
 
 Your payment for order #{{ $order->id }} has been successfully processed.
 
-Your Plugin () Token is {{ $order->orderUser->token }}
+Your Plugin () Token is {{ $order->softToken->token }}
 
 @component('mail::panel')
 **Order Details:**  
