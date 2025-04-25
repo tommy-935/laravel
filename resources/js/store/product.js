@@ -40,6 +40,14 @@ export default {
             }).catch(error => {
                 alert(error.message);
                 store.commit("setLoading", false);
+                // 404
+                if (error.response.status == 404) {
+                    location.href = "/404";
+                }
+                // 500
+                if (error.response.status == 500) {
+                    store.commit("setError", "Server error");
+                }
             });
         }
     }

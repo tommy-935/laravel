@@ -48,6 +48,13 @@ class ProductController extends Controller
             ]
         ];
         $product = Product::get($where);
+        if (! $product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'product not found'
+            ], 404);
+        }
+
         $product->images = [$product->img_uri ? Storage::url($product->img_uri) : null];
         if (! $product) {
             return response()->json([
