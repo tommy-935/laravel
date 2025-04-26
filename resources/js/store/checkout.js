@@ -4,7 +4,7 @@ import store from './store';
 
 export default {
     state: {
-        uaa: []
+        order: null,
     },
     mutations: {
         checkoutCallback(state, res) {
@@ -20,7 +20,7 @@ export default {
             store.commit("setLoading", false);
             // go to personal page
             if (res.status == 200) {
-                
+                state.order = res.data.data;
             }
         }
     },

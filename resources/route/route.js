@@ -52,6 +52,11 @@ const routes = [
 		component: Checkout
 	},
 	{
+		path: '/checkout/key/:key',
+		name: 'Success',
+		component: () => import('../views/pages/Success.vue')
+	},
+	{
 		path: '/privacy-policy',
 		name: 'PrivacyPolicy',
 		component: PrivacyPolicy

@@ -45,6 +45,6 @@ export default {
         return axios.post("/checkout/process", params);
     },
     getCheckout: function(params){
-        return axios.get("/checkout/success", params);
+        return axios.post("/checkout/success", params);
     },
 }

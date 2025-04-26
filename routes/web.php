@@ -5,6 +5,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VisitsController;
+use App\Http\Controllers\CookieConsentController;
 
 /*
 Route::get('/', function () {
@@ -50,7 +51,7 @@ Route::get('/cookie-consent', [CookieConsentController::class, 'getConsent'])
     
     Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
     
-    Route::get('/checkout/success', [CheckoutController::class, 'checkoutSuccess'])->name('checkout.success');
+    Route::post('/checkout/success', [CheckoutController::class, 'checkoutSuccess'])->name('checkout.success');
     
     Route::get('/checkout/cancel', [CheckoutController::class, 'checkoutCancel'])->name('checkout.cancel');
     

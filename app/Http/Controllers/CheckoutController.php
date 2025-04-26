@@ -78,10 +78,9 @@ class CheckoutController extends Controller
 
     protected function createOrder(Request $request)
     {
-        error_log(print_r('$data', true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
 
         $cartUuid = $request->cookie('hash_uuid');
-        $cartItems = CartItem::with('product')
+        $cartItems = CartItem::with('product.productDetail')
             ->where('session_id', $cartUuid)
             ->get();
         if ($cartItems->isEmpty()) {
@@ -104,7 +103,6 @@ class CheckoutController extends Controller
                 $shipping_address = $request->shipping_address;
                 $order_key = Str::random(32);
                 $expired_at = '2999-12-31 00:00:00';
-                error_log(print_r('ooo$5555', true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
                 try{
                     $order = Order::create([
                         'order_num' => 'NUM-' . Str::upper(Str::random(10)),
@@ -121,16 +119,15 @@ class CheckoutController extends Controller
                     'sub_total' => $total,
                     'total' => $total,
                 ]);
-                error_log(print_r('ooo$5555', true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
 
                 
                 $cartItems->map(function ($item) use ($order) {
-                    $order->product()->create([
+                    $order->products()->create([
                         'product_id' => $item->product->id,
                         'product_name' => $item->product->name,
-                        'price' => $item->product->price,
+                        'price' => $item->product->productDetail->price,
                         'qty' => $item->quantity,
-                        'item_price' => $item->product->price * $item->quantity,
+                        'item_price' => $item->product->productDetail->price * $item->quantity,
                     ]);
                 });
                 
@@ -185,21 +182,8 @@ class CheckoutController extends Controller
             ], 500);
         }
         
-
-        /*
-        foreach ($cartItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $item->product->price,
-            ]);
-        }
-            */
-
-        
-        CartItem::where('user_id', Auth::id())->delete();
-        CartItem::where('session_id', $cartUuid)->delete();
+       // CartItem::where('user_id', Auth::id())->delete();
+       // CartItem::where('session_id', $cartUuid)->delete();
 
         return $order;
     }
@@ -280,12 +264,9 @@ class CheckoutController extends Controller
             'transaction_id' => $session->id,
         ]);
 
-        $this->successFul($order);
-
+        return $this->successFul($order, $session);
         // return redirect()->away($session->url);
-        return response()->json([
-            'url' => $session->url
-        ]);
+        
     }
 
     protected function genToken(Order $order)
@@ -308,7 +289,7 @@ class CheckoutController extends Controller
         return $token;
     }
 
-    protected function successFul(Order $order)
+    protected function successFul(Order $order, $session = null)
     {
         // token
         // $token = $this->genToken($order);
@@ -318,6 +299,13 @@ class CheckoutController extends Controller
 
         // queue
        // Mail::to($order->orderUser->shipping_email)->queue(new PaymentSuccessful($order));
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => [
+                'redirect_url' => url('/checkout/key/' . $order->order_key),
+                // 'session_url' => $session->url
+            ]], 200);
     }
 
     protected function processApplePayPayment(Order $order)
@@ -337,6 +325,7 @@ class CheckoutController extends Controller
 
     public function checkoutSuccess(Request $request)
     {
+        /*
         if ($request->has('session_id')) {
             Stripe::setApiKey(config('services.stripe.secret'));
             $session = StripeSession::retrieve($request->session_id);
@@ -351,8 +340,39 @@ class CheckoutController extends Controller
                 $payment->order->update(['status' => 'completed']);
             }
         }
+            */
 
-        return view('checkout.success');
+        $order_key = $request->key;
+        if (!$order_key) {
+            return response()->json([
+                'success' => false,
+                'message' => 'order key is required',
+                'data' => []
+            ]);
+        }
+        $order = Order::with([
+            'products', 
+            'payment', 
+            'price', 
+            'orderUser', 
+            'orderSoftToken' => function ($query) {
+                $query->select('token', 'expired_at', 'order_id');
+            }]
+            )->where('order_key', $order_key)->first();
+        if (!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'order not found',
+                'data' => []
+            ]);
+        }
+        error_log(print_r($order, true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $order
+        ]);
     }
 
     public function checkoutCancel()
