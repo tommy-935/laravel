@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderProduct extends Model
 {
+    protected $table = 'order_product';
     protected $fillable = [
         'order_id',
         'product_id',
@@ -14,6 +15,8 @@ class OrderProduct extends Model
         'price',
         'item_price'
     ];
+    const UPDATED_AT = null;
+    const CREATED_AT = null;
 
     public function order()
     {

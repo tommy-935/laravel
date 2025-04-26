@@ -25,7 +25,7 @@ class MailSentListener
             'subject' => $subject,
             'body' => $body,
             'email' => $toEmail,
-            'status' => 'sent',
+            'status' => 1,
             'created_by' => $uid,
             'updated_by' => $uid,
         ]);

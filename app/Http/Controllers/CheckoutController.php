@@ -17,6 +17,7 @@ use App\Mail\PaymentSuccessful;
 use App\Models\SoftToken;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CheckoutController extends Controller
 {
@@ -115,15 +116,14 @@ class CheckoutController extends Controller
                     ]);
                 
                 
-                error_log(print_r('ooo$9999', true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
-                error_log(print_r($request, true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
 
                 $order->price()->create([
                     'sub_total' => $total,
                     'total' => $total,
                 ]);
+                error_log(print_r('ooo$5555', true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
 
-                /*
+                
                 $cartItems->map(function ($item) use ($order) {
                     $order->product()->create([
                         'product_id' => $item->product->id,
@@ -133,7 +133,6 @@ class CheckoutController extends Controller
                         'item_price' => $item->product->price * $item->quantity,
                     ]);
                 });
-                */
                 
 
                 $order->orderUser()->create([
@@ -163,7 +162,7 @@ class CheckoutController extends Controller
                 ]);
 
                 $token = Str::random(32);
-                $order->softToken()->create([
+                $order->orderSoftToken()->create([
                     'token' => $token,
                     'expired_at' => $expired_at,
                     'created_by' => $uid,
@@ -175,8 +174,7 @@ class CheckoutController extends Controller
                     error_log("内部异常：" . $e->getMessage() . "\n", 3, '/Volumes/dev/www/debug.log');
                     throw $e; // 向外抛出事务终止
                 }
-                error_log(print_r($order, true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
-                error_log(print_r('66666', true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
+                
             
             });
         }catch (\Throwable $e){
@@ -260,7 +258,7 @@ class CheckoutController extends Controller
                     'product_data' => [
                         'name' => 'Order #' . $order->order_num,
                     ],
-                    'unit_amount' => $order->orderPrice->total * 100,
+                    'unit_amount' => $order->price->total * 100,
                 ],
                 'quantity' => 1,
             ]],
@@ -274,11 +272,10 @@ class CheckoutController extends Controller
 
         OrderPayment::create([
             'order_id' => $order->id,
-            'order_num' => $order->order_num,
-            'paid_date' => $session->created,
+            'paid_date' => Carbon::parse($session->created)->format('Y-m-d H:i:s'),
             'payment_method' => 'stripe',
             'currency' => $session->currency,
-            'amount' => $order->total_amount,
+            'amount' => $order->price->total,
             'status' => 'pending',
             'transaction_id' => $session->id,
         ]);

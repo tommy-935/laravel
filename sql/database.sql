@@ -181,7 +181,7 @@ create table tb_order(
 	id int(11) not null auto_increment,
 	`order_num` varchar(25) not null default "",
 	`order_key` varchar(32) not null default "",
-	`order_status` varchar(12) not null default 0 comment "1.pending 2.processing 3. completed 4. failed 5. canceled 6. refunded",
+	`status` varchar(12) not null default '' comment "1.pending 2.processing 3. completed 4. failed 5. canceled 6. refunded",
 	
 	created_by int(11) not null default 0,
 	created_at datetime default null,
@@ -197,10 +197,10 @@ create table tb_order_payment(
 	order_id int(11) not null default 0,
 	`paid_date` datetime default null,
 	`payment_method` varchar(12) not null default "" comment "wechatpay | alipay | paypal | stripe",
-	`status` tinyint(1) not null default 0 comment "payment status",
+	`status` varchar(12) not null default '' comment "payment status",
 	`amount` varchar(6) not null default "",
 	`currency` varchar(6) not null default "USD",
-	`transaction_id` varchar(25) not null default "",
+	`transaction_id` varchar(255) not null default "",
 	`details` text default null,
 	
 	created_by int(11) not null default 0,

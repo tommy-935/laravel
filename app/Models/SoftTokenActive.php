@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SoftTokenActive extends Model
 {
+    protected $table = 'soft_token_active';
     protected $fillable = [
         'token_id',
         'active_at',

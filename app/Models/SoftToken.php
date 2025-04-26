@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SoftToken extends Model
 {
+    protected $table = 'soft_token';
     protected $fillable = [
         'token',
         'expired_at',

@@ -83,13 +83,12 @@ return new class extends Migration
         Schema::create('order_payment', function (Blueprint $table) {
             $table->id();  // Auto-incrementing id field
             $table->integer('order_id')->default(0);  // order_id field
-            $table->string('order_num', 25)->default('');  // order_num field
             $table->dateTime('paid_date')->nullable();  // paid_date field
             $table->string('payment_method', 12)->default('')->comment('wechatpay | alipay | paypal | stripe');  // payment_method field
             $table->tinyInteger('status', false, true)->default(0)->comment('payment status');  // status field
             $table->string('amount', 6)->default('');  // amount field
             $table->string('currency', 6)->default('USD');  // currency field
-            $table->string('transaction_id', 25)->default('');  // transaction_id field
+            $table->string('transaction_id', 255)->default('');  // transaction_id field
             $table->text('details')->nullable()->default(null);
 
             $table->integer('created_by')->default(0);  // created_by field

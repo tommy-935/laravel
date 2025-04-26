@@ -44,8 +44,13 @@
 							</div>
 
 							<div class="mb-4">
-								<label for="street_address" class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
-								<input v-model="form.street_address" type="text" id="street_address" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+								<label for="address1" class="block text-sm font-medium text-gray-700 mb-1">Street Address 1</label>
+								<input v-model="form.address1" type="text" id="address1" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
+							</div>
+
+							<div class="mb-4">
+								<label for="address2" class="block text-sm font-medium text-gray-700 mb-1">Street Address 2</label>
+								<input v-model="form.address1" type="text" id="address2" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required />
 							</div>
 
 							<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -222,7 +227,8 @@ export default {
 			email: '66@fi.com',
 			phone: '234444',
 			country: 'US',
-			street_address: 'fff',
+			address1: 'fff',
+			address2: 'fff',
 			city: 'Aluran',
 			state: 'sss',
 			zip_code: '36830'

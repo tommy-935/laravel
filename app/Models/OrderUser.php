@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderUser extends Model
 {
+    protected $table = 'order_user';
     protected $fillable = [
         'order_id',
         'user_id',
@@ -33,6 +34,8 @@ class OrderUser extends Model
         'shipping_phone',
         'shipping_zip_code'
     ];
+    const UPDATED_AT = null;
+    const CREATED_AT = null;
 
     public function order()
     {
