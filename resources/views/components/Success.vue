@@ -28,7 +28,7 @@
                 <p>{{ order.order_user.shipping_address1 }}</p>
                 <p>{{ order.order_user.shipping_city }}, {{ order.order_user.shipping_state }} {{ order.order_user.shipping_zip_ode }}</p>
                 <p>{{ order.order_user.shipping_country }}</p>
-                <p class="mt-2">Phone: {{ order.order_user.phone }}</p>
+                <p class="mt-2">Phone: {{ order.order_user.shipping_phone }}</p>
               </div>
             </div>
             
@@ -36,11 +36,11 @@
             <div>
               <h3 class="text-sm font-medium text-gray-500 mb-2">Billing Address</h3>
               <div class="text-sm text-gray-700">
-                <p>{{ order.order_user.shipping_first_name }}</p>
-                <p>{{ order.order_user.shipping_address1 }}</p>
-                <p>{{ order.order_user.shipping_city }}, {{ order.order_user.shipping_state }} {{ order.order_user.shipping_zip_ode }}</p>
-                <p>{{ order.order_user.shipping_country }}</p>
-                <p class="mt-2">Phone: {{ order.order_user.phone }}</p>
+                <p>{{ order.order_user.billing_first_name }}</p>
+                <p>{{ order.order_user.billing_address1 }}</p>
+                <p>{{ order.order_user.billing_city }}, {{ order.order_user.billing_state }} {{ order.order_user.billing_zip_ode }}</p>
+                <p>{{ order.order_user.billing_country }}</p>
+                <p class="mt-2">Phone: {{ order.order_user.billing_phone }}</p>
               </div>
             </div>
           </div>

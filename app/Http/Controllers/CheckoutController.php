@@ -56,7 +56,11 @@ class CheckoutController extends Controller
 
         switch ($request->payment_method) {
             case 'paypal':
-                return $this->processPayPalPayment($order);
+                // server mode
+                // return $this->processPayPalPayment($order);
+
+                // client mode
+                return $this->successCreateOrder($order);
             case 'stripe':
                 return $this->processStripePayment($order);
             case 'apple_pay':
@@ -64,6 +68,19 @@ class CheckoutController extends Controller
             default:
                 return back()->with('error', 'not supported');
         }
+    }
+
+    public function successCreateOrder(Order $order)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => [
+                'order_id' => $order->order_num,
+                'amount' => $order->price->total,
+                'currency' => 'USD'
+            ]
+        ]);
     }
 
     public function getCheckoutOrderInfo(Request $request)
@@ -74,6 +91,15 @@ class CheckoutController extends Controller
             'message' => 'success',
             'data' => $data
         ]);
+    }
+
+    protected function generateUniqueOrderNumber()
+    {
+        do {
+            $orderNumber = 'ORD-' . date('Ymd') . rand(1000, 9999);
+        } while (DB::table('order')->where('order_num', $orderNumber)->exists());
+
+        return $orderNumber;
     }
 
     protected function createOrder(Request $request)
@@ -105,7 +131,7 @@ class CheckoutController extends Controller
                 $expired_at = '2999-12-31 00:00:00';
                 try{
                     $order = Order::create([
-                        'order_num' => 'NUM-' . Str::upper(Str::random(10)),
+                        'order_num' => $this->generateUniqueOrderNumber(),
                         'order_key' => $order_key,
                         'status' => 'pending',
                         'created_by' => $uid,

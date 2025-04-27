@@ -1,9 +1,9 @@
 <template>
     <div class="paypal-payment">
-      <!-- PayPal 按钮容器 -->
+      <!-- PayPal -->
       <div ref="paypalButton" class="paypal-button-container"></div>
       
-      <!-- 状态消息 -->
+      <!-- statusMessage -->
       <div v-if="statusMessage" class="mt-4 p-3 rounded" :class="statusClass">
         {{ statusMessage }}
       </div>
@@ -28,7 +28,7 @@
     },
     intent: {
       type: String,
-      default: 'capture', // 或 'authorize'
+      default: 'capture', // or 'authorize'
       validator: value => ['capture', 'authorize'].includes(value)
     }
   })
@@ -40,7 +40,7 @@
   const statusClass = ref('bg-blue-100 text-blue-800')
   let paypalButtons = null
   
-  // 加载 PayPal SDK
+  // load PayPal SDK
   const loadPayPalSDK = () => {
     return new Promise((resolve) => {
       const script = document.createElement('script')
@@ -50,22 +50,22 @@
     })
   }
   
-  // 初始化 PayPal 按钮
+  // init PayPal button
   const initializePayPal = async () => {
     try {
-      statusMessage.value = '正在加载 PayPal...'
+      statusMessage.value = 'loading PayPal...'
       
-      // 加载 SDK
+      // load SDK
       await loadPayPalSDK()
       
-      // 检查是否已加载
+      // check if SDK is loaded
       if (!window.paypal) {
-        throw new Error('PayPal SDK 未能正确加载')
+        throw new Error('PayPal SDK can not be loaded')
       }
       
-      statusMessage.value = '正在准备支付...'
+      statusMessage.value = 'now initializing PayPal...'
       
-      // 渲染按钮
+      // render PayPal button
       paypalButtons = window.paypal.Buttons({
         style: {
           layout: 'vertical',
@@ -74,43 +74,87 @@
           label: 'paypal'
         },
         
-        // 创建订单
+        // create order
         createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: props.amount.toFixed(2),
-                currency_code: props.currency
+          // create order in backend
+          fetch('/checkout/process', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+              amount: props.amount,
+              currency: props.currency,
+              intent: props.intent
+            })
+          }).then(response => response.json())
+          .then(result => {
+              if (result.status) {
+                  alert('success verify');
+                  const data = result.data;
+                  return actions.order.create({
+                    purchase_units: [{
+                      amount: {
+                        value: data.amount,
+                        currency_code: data.currency
+                      },
+                      order_id: data.order_id
+                    }]
+                  })
+              } else {
+                  alert('verify failed');
               }
-            }]
+          }).catch((error) => {
+              console.error('PayPal verification failed:', error);
           })
+          
         },
         
-        // 批准后处理
+        // deal with payment approval
         onApprove: (data, actions) => {
-          statusMessage.value = '正在处理支付...'
+          statusMessage.value = 'processing payment...'
           statusClass.value = 'bg-blue-100 text-blue-800'
           
           emit('payment-approved', data)
           
           return actions.order.capture().then((details) => {
-            statusMessage.value = '支付成功!'
+            statusMessage.value = 'payment processed successfully!'
             statusClass.value = 'bg-green-100 text-green-800'
-            emit('payment-completed', details)
+            // check order and update order status in backend
+            fetch('/paypal/capture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    orderID: data.orderID
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status) {
+                  emit('payment-completed', details, result.data)
+                } else {
+                    alert('verify failed');
+                }
+            });
+            
           })
         },
         
-        // 错误处理
+        // error
         onError: (err) => {
           console.error('PayPal error:', err)
-          statusMessage.value = `支付错误: ${err.message || '未知错误'}`
+          statusMessage.value = `failed: ${err.message || 'nokown error'}`
           statusClass.value = 'bg-red-100 text-red-800'
           emit('payment-error', err)
         },
         
-        // 取消处理
+        // cancel
         onCancel: (data) => {
-          statusMessage.value = '您已取消支付'
+          statusMessage.value = 'canceled'
           statusClass.value = 'bg-yellow-100 text-yellow-800'
         }
       })
@@ -121,18 +165,16 @@
       }
     } catch (error) {
       console.error('PayPal initialization failed:', error)
-      statusMessage.value = `无法加载 PayPal: ${error.message}`
+      statusMessage.value = `can not load PayPal: ${error.message}`
       statusClass.value = 'bg-red-100 text-red-800'
     }
   }
   
-  // 生命周期钩子
   onMounted(() => {
     initializePayPal()
   })
   
   onBeforeUnmount(() => {
-    // 清理 PayPal 按钮
     if (paypalButton.value) {
       paypalButton.value.innerHTML = ''
     }
@@ -141,7 +183,7 @@
   
   <style>
   .paypal-button-container {
-    min-height: 40px; /* 确保有足够空间显示按钮 */
+    min-height: 40px; 
     margin: 1rem 0;
   }
   </style>

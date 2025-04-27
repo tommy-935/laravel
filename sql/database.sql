@@ -1,5 +1,5 @@
-create database lymoswp default character set utf8mb4 collate utf8mb4_unicode_ci;
-use lymoswp;
+create database yourdb default character set utf8mb4 collate utf8mb4_unicode_ci;
+use yourdb;
 /*
 create table tb_users (
     id int(11) auto_increment not null,
@@ -287,14 +287,14 @@ create table tb_product(
 
 
 # tb_role
-drop table if exists tb_role;
-create table tb_role(
+drop table if exists tb_roles;
+create table tb_roles(
 	id int(11) not null auto_increment,
 	`name` varchar(60) not null default "",
-	added_by int(11) not null default 0,
-	added_date datetime default null,
+	created_by int(11) not null default 0,
+	created_at datetime default null,
 	updated_by int(11) not null default 0,
-	updated_date datetime default null,
+	updated_at datetime default null,
 	
 	primary key(id),
 	unique key(`name`)
@@ -304,8 +304,8 @@ insert into tb_role (name, added_date) values ("administrator", "2023-07-05 12:1
 insert into tb_role (name, added_date) values ("customer", "2023-07-05 12:12:12");
 
 # tb_user_role
-drop table if exists tb_user_role;
-create table tb_user_role(
+drop table if exists tb_user_roles;
+create table tb_user_roles(
 	id int(11) not null auto_increment,
 	user_id int(11) not null default 0,
 	role_id int(11) not null default 0,

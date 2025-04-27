@@ -6,6 +6,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VisitsController;
 use App\Http\Controllers\CookieConsentController;
+use App\Http\Controllers\PaypalController;
 
 /*
 Route::get('/', function () {
@@ -50,6 +51,8 @@ Route::get('/cookie-consent', [CookieConsentController::class, 'getConsent'])
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout');
     
     Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
+
+    Route::post('/paypal/capture', [PaypalController::class, 'capture'])->name('paypal.capture');
     
     Route::post('/checkout/success', [CheckoutController::class, 'checkoutSuccess'])->name('checkout.success');
     

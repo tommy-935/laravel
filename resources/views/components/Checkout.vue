@@ -362,11 +362,14 @@ export default {
 		const handlePayPalApproved = (data) => {
 			console.log('PayPal payment approved:', data)
 			// paying logic
+			
 		}
 
-		const handlePayPalCompleted = (details) => {
+		const handlePayPalCompleted = (details, data) => {
 			console.log('PayPal payment completed:', details)
-
+			if(data.redirect_url){
+				window.location.href = data.redirect_url;
+			}
 		}
 
 		const handlePayPalError = (error) => {
