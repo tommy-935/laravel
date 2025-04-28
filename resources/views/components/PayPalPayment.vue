@@ -26,6 +26,10 @@
       type: String,
       required: true
     },
+    form: {
+      type: Object,
+      required: true
+    },
     intent: {
       type: String,
       default: 'capture', // or 'authorize'
@@ -43,7 +47,19 @@
   // load PayPal SDK
   const loadPayPalSDK = () => {
     return new Promise((resolve) => {
+      if(window.paypal) {
+        resolve()
+        return
+      }
       const script = document.createElement('script')
+      if (!props.clientId) {
+      reject(new Error('Missing PayPal client ID'))
+      return
+    }
+    if (!props.currency) {
+      reject(new Error('Missing currency'))
+      return
+    }
       script.src = `https://www.paypal.com/sdk/js?client-id=${props.clientId}&currency=${props.currency}`
       script.onload = resolve
       document.body.appendChild(script)
@@ -62,6 +78,7 @@
       if (!window.paypal) {
         throw new Error('PayPal SDK can not be loaded')
       }
+      console.log('PayPal SDK loaded', window.paypal)
       
       statusMessage.value = 'now initializing PayPal...'
       
@@ -73,9 +90,15 @@
           shape: 'rect',
           label: 'paypal'
         },
+
         
         // create order
         createOrder: (data, actions) => {
+          console.log('create order', props.form)
+          const params = {
+            ...props.form,
+            payment_method: 'paypal',
+          };
           // create order in backend
           fetch('/checkout/process', {
             method: 'POST',
@@ -83,11 +106,7 @@
               'Content-Type': 'application/json',
               'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
-            body: JSON.stringify({
-              amount: props.amount,
-              currency: props.currency,
-              intent: props.intent
-            })
+            body: JSON.stringify(params)
           }).then(response => response.json())
           .then(result => {
               if (result.status) {

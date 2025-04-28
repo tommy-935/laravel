@@ -164,14 +164,14 @@
 							<!-- PayPal -->
 							<div class="border border-gray-200 rounded-md p-4">
 								<div class="flex items-center">
-									<input v-model="paymentMethod" type="radio" id="paypal" value="paypal"
+									<input v-model="paymentMethod" type="radio" id="payment-paypal" value="paypal"
 										class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" />
-									<label for="paypal" class="ml-3 block text-sm font-medium text-gray-700">
+									<label for="payment-paypal" class="ml-3 block text-sm font-medium text-gray-700">
 										PayPal
 									</label>
 								</div>
 								<div v-if="paymentMethod === 'paypal'" class="mt-4">
-									<PayPalPayment :amount="total" currency="USD" :client-id="paypalClientId"
+									<PayPalPayment :amount="total" currency="USD" :client-id="paypalClientId" :form="form"
 										intent="capture" @payment-approved="handlePayPalApproved"
 										@payment-completed="handlePayPalCompleted" @payment-error="handlePayPalError" />
 								</div>
@@ -274,7 +274,9 @@ export default {
 
 
 		// Stripe status
-		const stripePublishableKey = 'pk_test_C0j5hBWBIMfSwlUzg6HcMDeh00IwQOvZBm' // key
+		const stripePublishableKey = 'pk_test_51RIVv3R6LbXe1U6xPvOBMmFz7349yW8U667oMsySLfG17bUJSaZUcaRcprl9XWliEHcCwQVWrB41kO5BNHKKFsJa00ti8qzl9M' // key
+		const paypalClientId = 'AalPHAuvErzOQ2sGnn7mmaC-3swvG3ba68iRpdr0WaRL5I0uy8xpBLYR_Pzr4c0P5D8zfGpnSBcjNLeL' // PayPal Client ID
+
 		const stripeLoaded = ref(false)
 		const clientSecret = ref('')
 
@@ -357,7 +359,6 @@ export default {
 
 
 		// PayPal configure
-		const paypalClientId = 'AQAcuRuWIEhtkrWZeAUA3ZSIjxNAtom-xlfpJ2gAjVyxItwq5sC7sRK_-aK8rPxnKc27jO-dMHC7EjuR' // PayPal Client ID
 
 		const handlePayPalApproved = (data) => {
 			console.log('PayPal payment approved:', data)
