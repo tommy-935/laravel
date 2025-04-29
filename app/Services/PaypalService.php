@@ -12,11 +12,18 @@ class PaypalService
 
     public function __construct()
     {
-        $this->clientId = config('paypal.client_id');
-        $this->clientSecret = config('paypal.client_secret');
+        if(config('paypal.mode') == 'live'){
+            $this->clientId = config('paypal.client_id');
+            $this->clientSecret = config('paypal.client_secret');
+        }else{
+            $this->clientId = config('paypal.sandbox_client_id');
+            $this->clientSecret = config('paypal.sandbox_client_secret');
+        }
+        
         $this->baseUrl = config('paypal.mode') === 'live'
             ? 'https://api.paypal.com'
             : 'https://api.sandbox.paypal.com';
+        
     }
 
     public function getAccessToken()
@@ -35,6 +42,7 @@ class PaypalService
         $accessToken = $this->getAccessToken();
 
         $response = Http::withToken($accessToken)
+        ->withBody('', 'application/json')
             ->post($this->baseUrl . "/v2/checkout/orders/{$orderId}/capture");
 
         return $response->json();

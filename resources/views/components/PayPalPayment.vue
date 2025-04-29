@@ -95,12 +95,16 @@
         // create order
         createOrder: (data, actions) => {
           console.log('create order', props.form)
+          const address = {
+            billing_address: props.form,
+            shipping_address: props.form,
+          };
           const params = {
-            ...props.form,
+            ...address,
             payment_method: 'paypal',
           };
           // create order in backend
-          fetch('/checkout/process', {
+          return fetch('/checkout/process', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -109,8 +113,8 @@
             body: JSON.stringify(params)
           }).then(response => response.json())
           .then(result => {
-              if (result.status) {
-                  alert('success verify');
+            console.log('create order result', result)
+              if (result.success) {
                   const data = result.data;
                   return actions.order.create({
                     purchase_units: [{
@@ -118,7 +122,7 @@
                         value: data.amount,
                         currency_code: data.currency
                       },
-                      order_id: data.order_id
+                      custom_id: data.order_id
                     }]
                   })
               } else {
@@ -153,7 +157,7 @@
             })
             .then(response => response.json())
             .then(result => {
-                if (result.status) {
+                if (result.success) {
                   emit('payment-completed', details, result.data)
                 } else {
                     alert('verify failed');

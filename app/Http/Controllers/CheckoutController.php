@@ -18,6 +18,7 @@ use App\Models\SoftToken;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Services\PaymentService;
 
 class CheckoutController extends Controller
 {
@@ -40,6 +41,7 @@ class CheckoutController extends Controller
 
     public function processCheckout(Request $request)
     {
+        
         $request->validate([
             'payment_method' => 'required|in:paypal,stripe,apple_pay',
             'shipping_address' => 'required_if:same_as_billing,false',
@@ -118,7 +120,7 @@ class CheckoutController extends Controller
             */
         }
         $total = $cartItems->sum(function ($item) {
-            return $item->quantity * $item->product->price;
+            return $item->quantity * $item->product->productDetail->price;
         });
 
         $uid = Auth::id() ?? 0;
@@ -182,6 +184,13 @@ class CheckoutController extends Controller
                     'shipping_country' => $shipping_address['country'],
                     'shipping_phone' => $shipping_address['phone'],
                     'shipping_zip_code' => $shipping_address['zip_code'],
+                ]);
+
+                $order->payment()->create([
+                    'payment_method' => $request->payment_method,
+                    'currency' => $request->currency ? $request->currency : 'USD',
+                    'amount' => $total,
+                    'status' => 'pending',
                 ]);
 
                 $token = Str::random(32);
@@ -280,17 +289,14 @@ class CheckoutController extends Controller
             ],
         ]);
 
-        OrderPayment::create([
-            'order_id' => $order->id,
+        OrderPayment::where(['order_id' => $order->id])->update([
             'paid_date' => Carbon::parse($session->created)->format('Y-m-d H:i:s'),
-            'payment_method' => 'stripe',
-            'currency' => $session->currency,
-            'amount' => $order->price->total,
-            'status' => 'pending',
+            'status' => 'processing',
             'transaction_id' => $session->id,
         ]);
 
-        return $this->successFul($order, $session);
+        return PaymentService::successFul($order, $session);
+        // return $this->successFul($order, $session);
         // return redirect()->away($session->url);
         
     }

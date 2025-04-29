@@ -52,6 +52,7 @@ Route::get('/cookie-consent', [CookieConsentController::class, 'getConsent'])
     
     Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.process');
 
+
     Route::post('/paypal/capture', [PaypalController::class, 'capture'])->name('paypal.capture');
     
     Route::post('/checkout/success', [CheckoutController::class, 'checkoutSuccess'])->name('checkout.success');
