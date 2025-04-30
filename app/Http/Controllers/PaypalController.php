@@ -31,7 +31,8 @@ class PaypalController extends Controller
 
         if (isset($order['status']) && $order['status'] === 'COMPLETED') {
             $order_num = $order['purchase_units'][0]['custom_id'];
-            $this_order = Order::select('order_key')->where('order_num', $order_num)->first();
+            $this_order = Order::with(['orderUser', 'orderSoftToken', 'price'])->select('order_key', 'id', 'created_at')->where('order_num', $order_num)->first();
+
             if(!$this_order) {
                 return response()->json(['error' => 'Order not found'], 404);
             }
@@ -41,7 +42,7 @@ class PaypalController extends Controller
                 'transaction_id' => $order['id'],
             ]);
     
-            return PaymentService::successFul($order);
+            return PaymentService::successFul($this_order);
             // return response()->json([
             //     'success' => true,
             //     'message' => 'success',

@@ -9,7 +9,7 @@ Your Plugin () Token is {{ $order->orderSoftToken->token }}
 
 @component('mail::panel')
 **Order Details:**  
-Amount: \${{ number_format($order->amount, 2) }}  
+Amount: \${{ number_format($order->price->total, 2) }}  
 Date: {{ $order->created_at->format('F j, Y') }}  
 @endcomponent
 
