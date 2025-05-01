@@ -3,7 +3,7 @@
 
 Hello {{ $order->orderUser->shipping_last_name }},
 
-Your payment for order #{{ $order->id }} has been successfully processed.
+Your payment for order #{{ $order->order_num }} has been successfully processed.
 
 Your Plugin () Token is {{ $order->orderSoftToken->token }}
 

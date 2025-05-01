@@ -25,7 +25,7 @@ class PaymentSuccessful extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Payment Successful - Order #'.$this->order->id,
+            subject: 'Payment Successful - Order #'.$this->order->order_num,
         );
     }
 
