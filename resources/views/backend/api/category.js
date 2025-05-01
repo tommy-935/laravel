@@ -9,7 +9,15 @@ export default {
         'Accept': 'application/json',
         'Authorization': `Bearer ${getToken()}`
       }
-    })
+    }).then(response => {
+      return response;
+    }).catch(error => {
+      console.error('Error fetching categories:', error);
+      if(error.response.data.message == 'Unauthenticated.'){
+        location.href = '/login';
+      }
+      throw error;
+    });
   },
   
   createCategory(data) {

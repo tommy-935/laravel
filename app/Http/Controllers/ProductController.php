@@ -177,19 +177,18 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = Product::find($id);
+        $product = Product::find($id);
 
-        if (!$category) {
+        if (!$product) {
             return response()->json([
                 'success' => false,
-                'message' => 'category not found'
+                'message' => 'product not found'
             ], 404);
         }
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
-            'description' => 'nullable|string',
-            'status' => 'required|boolean',
+            'name' => 'required|string|max:255',
+            'short_desc' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -200,18 +199,41 @@ class ProductController extends Controller
             ], 422);
         }
 
-        $category->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->status,
-            'slug' => Str::slug($request->name),
-        ]);
+        DB::transaction(function () use ($request, &$product) {
+            
+
+            $product->update([
+                'name' => $request->name,
+                // 'short_desc' => $request->short_desc,
+                'uri' => Str::slug($request->uri),
+            ]);
+
+            $product->productCate()->update([
+                'product_id' => $product->id,
+                'cate_id' => $request->cate_id,
+            ]);
+
+            $product->productDetail()->update([
+                'product_id' => $product->id,
+                'price' => $request->price,
+                'short_desc' => $request->short_desc,
+                'long_desc' => '',
+            ]);
+            $product->productImg()->where('is_main', 1)
+                ->where('product_id', $product->id)->delete();
+            $product->productImg()->create([
+                'product_id' => $product->id,
+                'attachment_id' => $request->image_id,
+                'is_main' => 1,
+            ]);
+        });
+        
 
         return response()->json([
             'success' => true,
-            'message' => 'update success',
-            'data' => $category
-        ]);
+            'message' => 'success',
+            'data' => $product
+        ], 201);
     }
 
     /**

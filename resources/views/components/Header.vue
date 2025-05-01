@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-white shadow-sm sticky top-0 z-50" v-if="false">
+    <header class="bg-white shadow-sm sticky top-0 z-50">
       <div class="container mx-auto px-4 py-3">
         <div class="flex items-center justify-between">
           <!-- Mobile menu button (only on mobile) -->

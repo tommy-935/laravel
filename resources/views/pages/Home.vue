@@ -27,6 +27,6 @@ export default {
 </script>
 <template >
     <Header />
-    <Banner v-if="false" />
+    <Banner />
     <Footer />
 </template>

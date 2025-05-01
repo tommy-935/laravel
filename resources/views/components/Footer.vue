@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-[#f8f9fa] text-gray-700 py-8 px-4 md:px-8" v-if="false">
+    <footer class="bg-[#f8f9fa] text-gray-700 py-8 px-4 md:px-8">
       <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
         <!-- Quick Links Section -->
         <div class="flex-1 space-y-4">
