@@ -71,13 +71,13 @@ class UsersController extends Controller
     }
 
     /**
-     * Add / Update (POST /api/categories)
+     * Add / Update (POST /api/users)
      */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'short_desc' => 'nullable|string',
+            'email' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -89,7 +89,7 @@ class UsersController extends Controller
         }
 
         DB::transaction(function () use ($request, &$user) {
-            $user = User::where('uri', Str::slug($request->uri))->first();
+            $user = User::where('email', $request->email)->first();
 
             if ($user) {
                 return response()->json([
@@ -100,26 +100,16 @@ class UsersController extends Controller
 
             $user = User::create([
                 'name' => $request->name,
-                // 'short_desc' => $request->short_desc,
-                'uri' => Str::slug($request->uri),
+                'email' => $request->email,
+                'password' => $request->password,
             ]);
 
-            $user->userCate()->create([
+            $user->userRoles()->create([
                 'user_id' => $user->id,
-                'cate_id' => $request->cate_id,
+                'role_id' => $request->role_id,
             ]);
 
-            $user->userDetail()->create([
-                'user_id' => $user->id,
-                'price' => $request->price,
-                'short_desc' => $request->short_desc,
-                'long_desc' => '',
-            ]);
-            $user->userImg()->create([
-                'user_id' => $user->id,
-                'attachment_id' => $request->image_id,
-                'is_main' => 1,
-            ]);
+
         });
         
 
@@ -149,7 +139,7 @@ class UsersController extends Controller
     }
 
     /**
-     * detail (GET /api/user/{id})
+     * detail (GET /api/users/{id})
      */
     public function show($id)
     {
@@ -170,23 +160,13 @@ class UsersController extends Controller
     }
 
     /**
-     * update (PUT/PATCH /api/categories/{id})
+     * update (PUT/PATCH /api/users/{id})
      */
     public function update(Request $request, $id)
     {
-        $category = User::find($id);
-
-        if (!$category) {
-            return response()->json([
-                'success' => false,
-                'message' => 'category not found'
-            ], 404);
-        }
-
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
-            'description' => 'nullable|string',
-            'status' => 'required|boolean',
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -197,18 +177,40 @@ class UsersController extends Controller
             ], 422);
         }
 
-        $category->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'status' => $request->status,
-            'slug' => Str::slug($request->name),
-        ]);
+        DB::transaction(function () use ($request, &$user) {
+            $user = User::where('id', $request->id)->first();
+
+            if (! $user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'user not found'
+                ], 422);
+            }
+
+            $update_user = [
+                'name' => $request->name,
+                'email' => $request->email,
+            ];
+            if($request->password){
+                $update_user['password'] = $request->password;
+            }
+
+            $user->update($update_user);
+
+            $user->userRoles()->delete();
+            $user->userRoles()->create([
+                'user_id' => $user->id,
+                'role_id' => $request->role_id,
+            ]);
+
+        });
+        
 
         return response()->json([
             'success' => true,
-            'message' => 'update success',
-            'data' => $category
-        ]);
+            'message' => 'success',
+            'data' => $user
+        ], 201);
     }
 
     /**
@@ -226,8 +228,7 @@ class UsersController extends Controller
         }
 
         DB::transaction(function () use ($user) {
-            $user->userDetail()->delete();
-            $user->userImg()->delete();       
+            $user->userRoles()->delete();
             $user->delete();
         });
 

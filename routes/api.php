@@ -9,6 +9,7 @@ use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RolesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('products', ProductController::class);
     Route::apiResource('orders', OrderController::class);
     Route::apiResource('users', UsersController::class);
+    Route::apiResource('roles', RolesController::class);
 
     Route::post('/attachments', [AttachmentController::class, 'store']);
 

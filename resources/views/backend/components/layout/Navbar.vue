@@ -11,7 +11,6 @@
       </div>
 
       <div class="flex items-center space-x-4">
-        <!-- 通知按钮 -->
         <div class="relative">
           <button class="p-1 rounded-full text-gray-500 hover:text-gray-600 hover:bg-gray-100">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,7 +21,6 @@
           <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </div>
 
-        <!-- 用户头像 + 菜单 -->
         <div class="relative" ref="menuRef">
           <button class="flex items-center space-x-2" @click="toggleMenu">
             <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
@@ -33,10 +31,9 @@
                   0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
               </svg>
             </div>
-            <span class="text-sm font-medium text-gray-700">Admin</span>
+            <span class="text-sm font-medium text-gray-700">{{ user_name }}</span>
           </button>
 
-          <!-- 动画菜单 -->
           <transition name="fade-scale">
             <div v-if="menuOpen"
               class="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10 origin-top-right">
@@ -57,10 +54,15 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
+import SecureStorage from '_@/js/utils/secureStorage';
+
 
 const menuOpen = ref(false)
 const menuRef = ref(null)
 const store = useStore()
+
+const storage = new SecureStorage('app', 'custom-secret-key')
+const user_name = ref(storage.get('name'));
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value

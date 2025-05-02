@@ -57,9 +57,9 @@ class User extends Authenticatable
 
     public static function getList(Array $where = [], Int $limit = 10){
         $query = DB::table(self::$_table . ' as a');
-        $data = $query->select('a.*', 'b.role_id', 'c.name as role_name')
-            ->leftjoin('user_role as b', 'a.id', '=', 'b.user_id')
-            ->leftjoin('role as c', 'b.role_id', '=', 'c.id')
+        $data = $query->select('a.id', 'a.email', 'a.created_at', 'a.name', 'b.role_id', 'c.name as role_name')
+            ->leftjoin('user_roles as b', 'a.id', '=', 'b.user_id')
+            ->leftjoin('roles as c', 'b.role_id', '=', 'c.id')
             ->where($where)
            // ->limit($limit)
             ->orderBy('a.id', 'desc')

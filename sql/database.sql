@@ -286,7 +286,7 @@ create table tb_product(
 )ENGINE=INNODB default charset=utf8mb4 comment "product";
 
 
-# tb_role
+# tb_roles
 drop table if exists tb_roles;
 create table tb_roles(
 	id int(11) not null auto_increment,
@@ -300,10 +300,10 @@ create table tb_roles(
 	unique key(`name`)
 )ENGINE=INNODB default charset=utf8mb4 comment "role";
 
-insert into tb_role (name, added_date) values ("administrator", "2023-07-05 12:12:12");
-insert into tb_role (name, added_date) values ("customer", "2023-07-05 12:12:12");
+insert into tb_roles (name, created_at) values ("administrator", "2023-07-05 12:12:12");
+insert into tb_roles (name, created_at) values ("customer", "2023-07-05 12:12:12");
 
-# tb_user_role
+# tb_user_roles
 drop table if exists tb_user_roles;
 create table tb_user_roles(
 	id int(11) not null auto_increment,

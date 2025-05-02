@@ -24,6 +24,7 @@ export default {
             if (res.status == 200) {
                 const storage = new SecureStorage('app', 'custom-secret-key')
                 storage.set('token', res.data.token, 3600 * 24 * 3);
+                storage.set('name', res.data.user.name, 3600 * 24 * 3);
                 goToAdmin();
             }
         },

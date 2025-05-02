@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // Create tb_role table
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();  // Auto-incrementing id field
             $table->string('name', 60)->default('');  // name field
             $table->integer('added_by')->default(0);  // added_by field
@@ -25,13 +25,13 @@ return new class extends Migration
         });
 
         // Insert initial data into tb_role
-        DB::table('role')->insert([
-            ['name' => 'administrator', 'added_date' => '2023-07-05 12:12:12'],
-            ['name' => 'customer', 'added_date' => '2023-07-05 12:12:12'],
+        DB::table('roles')->insert([
+            ['name' => 'administrator', 'created_at' => '2023-07-05 12:12:12'],
+            ['name' => 'customer', 'created_at' => '2023-07-05 12:12:12'],
         ]);
 
         // Create tb_user_role table
-        Schema::create('user_role', function (Blueprint $table) {
+        Schema::create('user_roles', function (Blueprint $table) {
             $table->id();  // Auto-incrementing id field
             $table->integer('user_id')->default(0);  // user_id field
             $table->integer('role_id')->default(0);  // role_id field
@@ -52,7 +52,7 @@ return new class extends Migration
     public function down(): void
     {
         // Drop the tables in reverse order
-        Schema::dropIfExists('user_role');
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('roles');
     }
 };

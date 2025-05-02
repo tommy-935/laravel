@@ -34,10 +34,7 @@ export const useUserStore = defineStore('user', {
     async updateUser(userData) {
       try {
         const response = await api.updateUser(userData.id, userData)
-        const index = this.users.findIndex(p => p.id === userData.id)
-        if (index !== -1) {
-          this.users.splice(index, 1, response.data)
-        }
+        this.fetchUsers()
         return response.data
       } catch (error) {
         console.error('Failed:', error)
