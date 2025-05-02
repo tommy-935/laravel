@@ -13,10 +13,12 @@
   
           <!-- Left side navigation -->
           <div class="flex items-center space-x-8">
-            <!-- Logo -->
-            <div class="flex-shrink-0 mr-0 md:mr-8">
-              <span class="text-2xl font-bold text-green-600">LymosWP</span>
-            </div>
+            <!-- Logo with Homepage Link -->
+          <div class="flex-shrink-0 mr-0 md:mr-8">
+            <a href="/" class="text-2xl font-bold text-green-600 hover:text-green-700 transition-colors">
+              LymosWP
+            </a>
+          </div>
   
             <!-- Primary navigation - desktop (hidden on mobile) -->
             <nav class="hidden md:flex space-x-6">

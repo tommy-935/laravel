@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -140,10 +140,7 @@ class UsersController extends Controller
         
         ];
         $user_list = User::getList($where, 2);
-        $user_list->transform(function ($user) {
-            $user->img_uri = $user->image ? Storage::url($user->image) : null;
-            return $user;
-        });
+        
         return response()->json([
             'success' => true,
             'message' => 'success',

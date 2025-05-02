@@ -34,9 +34,13 @@
                 :key="column.key"
                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
               >
-                <template v-if="column.type !== 'image'">
-                  {{ item[column.key] }}
-                </template>
+              <template v-if="column.render">
+                {{ column.render(item) }}
+              </template>
+              <template v-else-if="column.type !== 'image'">
+                {{ item[column.key] }}
+              </template>
+
                 
                 <template v-else-if="column.type === 'image'">
                   <img 

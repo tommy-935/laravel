@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -18,11 +19,8 @@ class OrderController extends Controller
                 'c.slug', '=', $slug
             ]
         ];
-        $product_list = Product::getList($where);
-        $product_list->transform(function ($product) {
-            $product->image = $product->image ? Storage::url($product->image) : null;
-            return $product;
-        });
+        $product_list = Order::getList($where);
+    
 
         return response()->json([
             'success' => true,
@@ -127,7 +125,7 @@ class OrderController extends Controller
         $where = [
         
         ];
-        $order_list = Order::getList($where, 2);
+        $order_list = Order::getList($where, 10);
         
         return response()->json([
             'success' => true,
@@ -174,9 +172,9 @@ class OrderController extends Controller
         }
 
         DB::transaction(function () use ($order) {
-            $order->orderItem()->delete();
-            $order->orderPayment()->delete();    
-            $order->orderProduct()->delete();   
+            $order->price()->delete();
+            $order->payment()->delete();    
+            $order->products()->delete();   
             $order->orderUser()->delete();
             $order->orderSoftToken()->delete();      
             $order->delete();

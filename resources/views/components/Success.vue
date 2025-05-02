@@ -160,19 +160,14 @@ const order = ref({
       quantity: 1,
       price: '32.00',
       image: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-01-product-01.jpg'
-    },
-    {
-      id: 2,
-      name: 'Nomad Tumbler',
-      variant: 'White',
-      quantity: 1,
-      price: '35.00',
-      image: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-01-product-02.jpg'
     }
   ],
   price: {
     subtotal: '67.00',
     total: '80.32',
+  },
+  payment: {
+    payment_method: 'Visa',
   },
   paymentMethod: 'Visa',
   paymentLast4: '4242',

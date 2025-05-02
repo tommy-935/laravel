@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
     protected $table = 'order';
+    static $_table = 'order';
     protected $fillable = [
         'order_num',
         'order_key',
@@ -14,11 +16,29 @@ class Order extends Model
         'created_by',
         'updated_by'
     ];
+
+
+    public static function getList(Array $where = [], Int $limit = 10){
+        $query = DB::table(self::$_table . ' as a');
+        $data = $query->select('a.*', 'b.total', 'd.payment_method', 'd.currency', 'e.shipping_country', 'e.shipping_email')
+            ->leftjoin('order_price as b', 'a.id', '=', 'b.order_id')
+            ->leftjoin('order_payment as d', 'a.id', '=', 'd.order_id')
+            ->leftjoin('order_user as e', 'a.id', '=', 'e.order_id')
+            ->where($where)
+           // ->limit($limit)
+            ->orderBy('a.id', 'desc')
+            ->paginate($limit);
+        // $sql = vsprintf(str_replace('?', "'%s'", $query->toSql()), $query->getBindings());
+        // error_log(print_r($sql, true) . "\r\n", 3, 'e:/www/debug.log');
+        return $data;
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /*
     public function items()
     {
         return $this->hasMany(OrderItem::class);
@@ -28,6 +48,7 @@ class Order extends Model
     {
         return $this->hasMany(Payment::class);
     }
+        */
 
     public function payment()
     {

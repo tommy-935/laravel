@@ -9,6 +9,7 @@
         @add="showForm"
         @edit="editUser"
         @delete="deleteUser"
+        @page-changed="userStore.fetchUsers"
       />
       
       <Modal :show="showModal" @close="closeForm">
@@ -34,7 +35,7 @@
     { key: 'id', label: 'ID' },
     { key: 'name', label: 'Name' },
     { key: 'email', label: 'Email' },
-    { key: 'role', label: 'Role' },
+    { key: 'role_name', label: 'Role' },
     { key: 'created_at', label: 'Added Date' }
   ]
   
