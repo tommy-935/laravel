@@ -7,10 +7,17 @@
         :columns="columns"
         :search-fields="searchFields"
         @edit="editOrder"
-        @add="showForm"
         @delete="deleteOrder"
         @page-changed="orderStore.fetchOrders"
       />
+
+      <Modal :show="showModal" @close="closeForm" width="960px">
+        <OrderForm
+          :product="selectedProduct"
+          @cancel="closeForm"
+          @submit="saveOrder"
+        />
+      </Modal>
     </div>
   </template>
   
@@ -19,9 +26,12 @@
   import { useOrderStore } from '@/store/modules/order'
   import DataTable from '@/components/ui/DataTable.vue'
   import { useRouter } from 'vue-router'
+  import Modal from '@/components/ui/Modal.vue'
+  import OrderForm from './OrderForm.vue'
   
   const orderStore = useOrderStore()
   const router = useRouter()
+  const showModal = ref(false)
   
   const columns = [
     { key: 'id', label: 'Order ID' },
@@ -32,6 +42,10 @@
     { key: 'status', label: 'Status' },
     { key: 'created_at', label: 'Added Date' }
   ]
+
+  const closeForm = () => {
+    showModal.value = false
+  }
   
   const searchFields = ['id', 'user.name', 'status']
   
@@ -43,6 +57,7 @@
   
   const editOrder = (order) => {
     // router.push(`/orders/${order.id}`)
+    showModal.value = true
   }
 
   const deleteOrder = async (order) => {
