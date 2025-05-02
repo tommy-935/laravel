@@ -2,7 +2,7 @@ import api from "../api";
 import { inject } from "vue";
 import store from './store';
 import SecureStorage from '_@/js/utils/secureStorage';
-import { goToAdmin } from "../lib/common";
+import { goToAdmin, goToLogin } from "../lib/common";
 
 
 export default {
@@ -25,6 +25,15 @@ export default {
                 const storage = new SecureStorage('app', 'custom-secret-key')
                 storage.set('token', res.data.token, 3600 * 24 * 3);
                 goToAdmin();
+            }
+        },
+        logoutCallback(state, res) {
+            store.commit("setLoading", false);
+            // go to personal page
+            if (res.status == 200) {
+                const storage = new SecureStorage('app', 'custom-secret-key')
+                storage.remove('token');
+                goToLogin();
             }
         }
     },
@@ -51,7 +60,11 @@ export default {
                 alert(error.message);
                 store.commit("setLoading", false);
             });
-
-        }
+        },
+        logout({ commit }) {
+            api.logout().then(function (res) {
+                commit("logoutCallback", res);
+            });
+        },
     }
 }

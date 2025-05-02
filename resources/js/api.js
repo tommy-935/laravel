@@ -19,6 +19,13 @@ export default {
     login: function(params){
         return axios.post("/api/login", params);
     },
+    logout: function(params){
+        return axios.post("/api/logout", params, {
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${getToken()}`
+        }});
+    },
     getProducts: function(params){
         if(typeof params.slug !== 'undefined'){ 
             return axios.get("/api/categories/"+params.slug);

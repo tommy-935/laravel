@@ -113,7 +113,7 @@ class ProductController extends Controller
                 'product_id' => $product->id,
                 'price' => $request->price,
                 'short_desc' => $request->short_desc,
-                'long_desc' => '',
+                'long_desc' => $request->long_desc,
             ]);
             $product->productImg()->create([
                 'product_id' => $product->id,
@@ -217,15 +217,18 @@ class ProductController extends Controller
                 'product_id' => $product->id,
                 'price' => $request->price,
                 'short_desc' => $request->short_desc,
-                'long_desc' => '',
+                'long_desc' => $request->long_desc,
             ]);
-            $product->productImg()->where('is_main', 1)
+            if($request->image_id) {
+                $product->productImg()->where('is_main', 1)
                 ->where('product_id', $product->id)->delete();
-            $product->productImg()->create([
-                'product_id' => $product->id,
-                'attachment_id' => $request->image_id,
-                'is_main' => 1,
-            ]);
+                $product->productImg()->create([
+                    'product_id' => $product->id,
+                    'attachment_id' => $request->image_id,
+                    'is_main' => 1,
+                ]);
+            }
+            
         });
         
 

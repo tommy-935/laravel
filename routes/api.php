@@ -41,7 +41,8 @@ Route::post('verify/license', 'App\Http\Controllers\Api\LicenseController@verify
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    
+    Route::post('/logout', [AuthController::class, 'logout']);
+
     // Route::post('/categories', [CategoryController::class, 'addToCart'])->name('cart.add');
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);

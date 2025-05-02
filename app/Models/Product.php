@@ -22,7 +22,7 @@ class Product extends Model
 
     public static function getList(Array $where = [], Int $limit = 10){
         $query = DB::table(self::$_table . ' as a');
-        $data = $query->select('a.*', 'b.cate_id', 'c.cate_name as category', 'd.price', 'd.short_desc', 'f.uri as image', 'f.name as img_name')
+        $data = $query->select('a.*', 'b.cate_id', 'c.cate_name as category', 'd.price', 'd.short_desc', 'd.long_desc', 'f.uri as image', 'f.name as img_name')
             ->leftjoin('product_cate_rela as b', 'a.id', '=', 'b.product_id')
             ->leftjoin('product_detail as d', 'a.id', '=', 'd.product_id')
             ->leftjoin('product_img as e', 'a.id', '=', 'e.product_id')

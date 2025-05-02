@@ -34,10 +34,7 @@ export const useProductStore = defineStore('product', {
     async updateProduct(productData) {
       try {
         const response = await api.updateProduct(productData.id, productData)
-        const index = this.products.findIndex(p => p.id === productData.id)
-        if (index !== -1) {
-          this.products.splice(index, 1, response.data)
-        }
+        this.fetchProducts()
         return response.data
       } catch (error) {
         console.error('Failed:', error)

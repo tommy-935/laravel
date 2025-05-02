@@ -68,7 +68,8 @@
   
   const saveProduct = async (productData) => {
     if (productData.id) {
-      await productStore.updateProduct(productData)
+      const res = await productStore.updateProduct(productData)
+      console.log("tttt", res)
     } else {
       await productStore.createProduct(productData)
     }

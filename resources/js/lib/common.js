@@ -10,6 +10,10 @@ export function goToAdmin () {
         window.location.href = '/admin'
 };
 
+export function goToLogin () {
+        window.location.href = '/login'
+}
+
 export function goToCart () {
         window.location.href = '/shipping-cart'
 };
