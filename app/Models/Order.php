@@ -92,7 +92,7 @@ class Order extends Model
     public static function getOrderInfo($order_id){
         
         $order = Order::with([
-            'products', 
+            'products.product:id,uri', 
             'payment', 
             'price', 
             'orderUser', 

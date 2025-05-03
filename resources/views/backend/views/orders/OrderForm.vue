@@ -37,7 +37,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="item in order.products" :key="item.id" class="hover:bg-gray-50">
-						<td class="p-2 border"><a :href="`/products/${item.product_id}`"
+						<td class="p-2 border"><a target="_blank" :href="`/products/${item.product.uri}`"
 								class="text-blue-500 hover:underline">
 								{{ item.product_name }}
 							</a></td>
@@ -80,7 +80,7 @@ import { reactive, ref } from 'vue'
 import AddressForm from './AddressForm.vue'
 import { useOrderStore } from '@/store/modules/order'
 
-const emit = defineEmits(['cancel'])
+const emit = defineEmits(['cancel', 'close'])
 const props = defineProps({
 	id: {
 		type: Number,
@@ -99,12 +99,13 @@ const order = ref({
 		total: 250.00,
 	},
 	products: [
-		{ product_id: 1, product_name: 'Product A', qty: 2, price: 50, item_price: 100 },
+		{ product_id: 1, product_name: 'Product A', qty: 2, price: 50, item_price: 100, product: {uri: ''} },
 	],
 	order_user: {
 		shipping_first_name: 'John',
 		shipping_last_name: 'Smith',
 		shipping_address1: '123 Main St',
+		shipping_address2: '123 Main St',
 		shipping_city: 'Austin',
 		shipping_state: 'TX',
 		shipping_zip_code: '78701',
@@ -114,6 +115,7 @@ const order = ref({
 		billing_first_name: 'John',
 		billing_last_name: 'Smith',
 		billing_address1: '123 Main St',
+		billing_address2: '123 Main St',
 		billing_city: 'Austin',
 		billing_state: 'TX',
 		billing_zip_code: '78701',
@@ -125,6 +127,7 @@ const order = ref({
 		first_name: 'John',
 		last_name: 'Smith',
 		address1: '123 Main St',
+		address2: '123 Main St',
 		city: 'Austin',
 		state: 'TX',
 		zip_code: '78701',
@@ -136,6 +139,7 @@ const order = ref({
 		first_name: 'John',
 		last_name: 'Smith',
 		address1: '123 Main St',
+		address2: '123 Main St',
 		city: 'Austin',
 		state: 'TX',
 		zip_code: '78701',
@@ -153,6 +157,7 @@ const order_data =  store.getOrder(props.id).then((response) => {
 		first_name: order.value.order_user.shipping_first_name,
 		last_name: order.value.order_user.shipping_last_name,
 		address1: order.value.order_user.shipping_address1,
+		address2: order.value.order_user.shipping_address2,
 		city: order.value.order_user.shipping_city,
 		state: order.value.order_user.shipping_state,
 		zip_code: order.value.order_user.shipping_zip_code,
@@ -164,6 +169,7 @@ const order_data =  store.getOrder(props.id).then((response) => {
 		first_name: order.value.order_user.billing_first_name,
 		last_name: order.value.order_user.billing_last_name,
 		address1: order.value.order_user.billing_address1,
+		address2: order.value.order_user.billing_address2,
 		city: order.value.order_user.billing_city,
 		state: order.value.order_user.billing_state,
 		zip_code: order.value.order_user.billing_zip_code,
@@ -180,6 +186,7 @@ const saveOrder = () => {
 	console.log('Saving order...', order)
 	store.updateOrder(order.value).then((response) => {
 		console.log('Order updated successfully:', response)
+		emit('close')
 	}).catch((error) => {
 		console.error('Error updating order:', error)
 	})

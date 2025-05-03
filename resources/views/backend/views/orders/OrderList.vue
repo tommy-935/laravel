@@ -15,6 +15,7 @@
         <OrderForm
           :id="id"
           @cancel="closeForm"
+          @close="closeForm"
         />
       </Modal>
     </div>
@@ -46,6 +47,9 @@
 
   const closeForm = () => {
     showModal.value = false
+  }
+  const openForm = () => {
+    showModal.value = true
   }
   
   const searchFields = ['id', 'user.name', 'status']
