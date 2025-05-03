@@ -12,7 +12,7 @@
             </ul>
           </div>
           <ul class="space-y-1">
-            <li><a href="mailto:lymoswp@gmail.com" class="hover:text-blue-600">About Us</a></li>
+            <li><a href="/about-us" class="hover:text-blue-600">About Us</a></li>
             <li><a href="mailto:lymoswp@gmail.com" class="hover:text-blue-600">Contact Us</a></li>
           </ul>
         </div>
@@ -29,8 +29,8 @@
             <p class="font-semibold mt-4">Also from us:</p>
             <ul class="flex flex-wrap gap-2 mt-2">
               <li><a href="https://profiles.wordpress.org/lymoswp/" class="hover:text-blue-600">Wordpress.org</a></li>
-              <li>|</li>
-              <li><a href="#" class="hover:text-blue-600">None</a></li>
+              <li v-if="false">|</li>
+              <li v-if="false"><a href="#" class="hover:text-blue-600">None</a></li>
               
             </ul>
           </div>

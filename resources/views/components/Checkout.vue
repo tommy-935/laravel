@@ -96,6 +96,15 @@
 										required />
 								</div>
 							</div>
+							<div class="flex items-center">
+								<input id="terms" type="checkbox" checked
+									class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+									required />
+								<label for="terms" class="ml-2 block text-sm text-gray-700">
+									I agree to the <a href="/terms-conditions" target="_blank" class="text-indigo-600 hover:text-indigo-500">Terms and
+										Conditions</a>
+								</label>
+							</div>
 						</form>
 					</div>
 				</div>
@@ -178,7 +187,7 @@
 							</div>
 
 							<!-- Apple Pay -->
-							<div class="border border-gray-200 rounded-md p-4">
+							<div v-if="false" class="border border-gray-200 rounded-md p-4">
 								<div class="flex items-center">
 									<input v-model="paymentMethod" type="radio" id="apple_pay" value="apple_pay"
 										class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" />
@@ -198,17 +207,9 @@
 
 						<!-- Terms & Place Order Button -->
 						<div class="mt-8">
-							<div class="flex items-center">
-								<input id="terms" type="checkbox"
-									class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-									required />
-								<label for="terms" class="ml-2 block text-sm text-gray-700">
-									I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-500">Terms and
-										Conditions</a>
-								</label>
-							</div>
+							
 
-							<button @click="handleCheckout"
+							<button v-if="false" @click="handleCheckout"
 								class="w-full mt-6 bg-indigo-600 py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
 								Place Order
 							</button>
@@ -229,15 +230,17 @@ import PayPalPayment from './PayPalPayment.vue'
 import ApplePayPayment from './ApplePayPayment.vue'
 import { useStore } from 'vuex';
 
+
 export default {
 	data() {
 		return {
+			
 		}
 	},
 	components: {
 		StripePayment,
 		PayPalPayment,
-		ApplePayPayment
+		ApplePayPayment,
 	},
 	setup() {
 		// Form data
@@ -254,8 +257,9 @@ export default {
 			zip_code: '36830'
 		});
 
+		const store = useStore();
 		// Payment method
-		const paymentMethod = ref('stripe');
+		const paymentMethod = ref('paypal');
 
 		// Sample cart items
 		const cartItems = ref([
@@ -336,6 +340,8 @@ export default {
 			console.log('params', params);
 			axios.post('/checkout/process', params)
 				.then(response => {
+					store.commit('setLoading', false);
+
 					console.log('Payment processed successfully:', response.data)
 					// success callback
 					if(response.data.success) {
@@ -347,12 +353,16 @@ export default {
 					}	
 				})
 				.catch(error => {
+					store.commit('setLoading', false);
+
 					console.error('Failed to process payment:', error)
 					// failed callback
 				});
 		}
 
 		const handlePaymentError = (error) => {
+			store.commit('setLoading', false);
+
 			console.error('Payment failed:', error)
 			// failed callback
 		}
@@ -374,6 +384,8 @@ export default {
 		}
 
 		const handlePayPalError = (error) => {
+			store.commit('setLoading', false);
+
 			console.error('PayPal payment error:', error)
 		}
 
@@ -460,7 +472,7 @@ export default {
 		,
 		getCartInfo() {
 			this.getCart();
-			const cart = computed(() => this.store.state.cart.cart);
+			const cart = computed(() => store.state.cart.cart);
 			console.log("cart", cart);
 		}
 	}

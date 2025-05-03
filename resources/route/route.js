@@ -11,6 +11,7 @@ import Checkout from '../views/pages/Checkout.vue'
 import PrivacyPolicy from "../views/pages/PrivacyPolicy.vue"
 import RefundPolicy from "../views/pages/RefundPolicy.vue"
 import TermsConditions from "../views/pages/TermsConditions.vue"
+import Aboutus from "../views/pages/Aboutus.vue"
 
 
 const routes = [
@@ -70,7 +71,12 @@ const routes = [
 		path: '/terms-conditions',
 		name: 'TermsConditions',
 		component: TermsConditions
-	}
+	},
+	{	
+		path: '/about-us',
+		name: 'Aboutus',
+		component: Aboutus
+	},
 ]
 
 const router = createRouter({

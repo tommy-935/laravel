@@ -207,9 +207,10 @@ const currentDate = ref(new Date().toLocaleDateString('en-US', {
 
 // Customize these values
 const companyName = ref('WP Premium Plugins');
-const websiteUrl = ref('https://wppremiumplugins.com');
-const contactEmail = ref('legal@wppremiumplugins.com');
+const websiteUrl = ref('https://lymoswp.com');
+const contactEmail = ref('lymoswp@gmail.com');
 const companyAddress = ref('123 Developer Street, San Francisco, CA 94107, USA');
+companyAddress.value = '';
 const currency = ref('USD');
 const governingLaw = ref('California, United States');
 </script>

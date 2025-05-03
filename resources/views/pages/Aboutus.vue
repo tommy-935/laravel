@@ -1,8 +1,7 @@
 <script>
 import Header from "../components/Header.vue";
-import Checkout from "../components/Checkout.vue";
 import Footer from "../components/Footer.vue";
-import Loading from "../components/Loading.vue";
+import Aboutus from "../components/Aboutus.vue"
 
 import {mapState, mapActions} from "vuex";
 export default {
@@ -12,9 +11,8 @@ export default {
     },
     components: {
         Header,
-        Checkout,
         Footer,
-        Loading
+        Aboutus
     },
     created(){
         this.getIndex();
@@ -29,7 +27,6 @@ export default {
 </script>
 <template>
     <Header />
-    <Checkout />
-    <Loading />
+    <Aboutus />
     <Footer />
 </template>

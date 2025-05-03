@@ -21,12 +21,12 @@
 			<!-- Product Details -->
 			<div>
 				<h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
-				<p class="text-gray-700 mb-4">{{ product.description }}</p>
+				<p class="text-gray-700 mb-4">{{ product.short_desc }}</p>
 				<p class="text-xl font-semibold text-blue-600">${{ product.price }}</p>
 
 				<!-- Add to Cart Button -->
 				<button @click="addToCartInner"
-					class="mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition">
+					class="mt-4 px-6 cursor-pointer py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition">
 					Add To Cart
 				</button>
 			</div>
@@ -42,9 +42,9 @@
 						'border-blue-500 text-blue-600': activeTab === 'description',
 						'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'description'
 					}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-						Detail
+						Description
 					</button>
-					<button @click="activeTab = 'reviews'" :class="{
+					<button v-if="false" @click="activeTab = 'reviews'" :class="{
 						'border-blue-500 text-blue-600': activeTab === 'reviews',
 						'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'reviews'
 					}" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
@@ -57,12 +57,26 @@
 			<div class="py-6">
 				<!-- Detail Tab -->
 				<div v-if="activeTab === 'description'" class="prose max-w-none">
-					<h3 class="text-xl font-semibold mb-4">Description</h3>
-					<div v-html="product.longDescription || 'No Description'"></div>
+					<h3 v-if="false" class="text-xl font-semibold mb-4">Description</h3>
+					<div v-html="product.long_desc || 'No Description'"></div>
+					 <!-- 
+		billingOptions="['monthly', 'yearly', 'onetime']" 
+	-->
+					<PricingComparisonAdvanced
+						:title="'Plugin Plans'"
+						:features="features"
+						:plans="plans"
+						:billingOptions="['onetime']"
+						:teamEnabled="false"
+						freeLink="/download"
+						proLink="/pro"
+						teamLink="/contact"
+						:addToCart="addToCartInner"
+					/>
 				</div>
 
 				<!-- Review Tab -->
-				<div v-if="activeTab === 'reviews'">
+				<div v-if="activeTab === 'reviews' && false">
 					<!-- Review List -->
 					<div v-if="reviews.length" class="space-y-6">
 						<div v-for="review in reviews" :key="review.id" class="border-b border-gray-200 pb-6">
@@ -97,7 +111,7 @@
 						No Reviews
 					</div>
 
-					<div class="mt-8 border-t border-gray-200 pt-6">
+					<div class="mt-8 border-t border-gray-200 pt-6" v-if="false">
 						<h4 class="text-lg font-medium mb-4">Review</h4>
 						<form @submit.prevent="submitReview">
 							<div class="mb-4">
@@ -148,10 +162,44 @@
 import { mapActions, useStore } from "vuex";
 import { computed, watch, ref } from "vue";
 import { useRoute } from "vue-router";
+import PricingComparisonAdvanced from "./PricingComparisonAdvanced.vue";
+
+
 
 export default {
+	components: {
+		PricingComparisonAdvanced
+	},
 	data() {
+		const features = [
+  { name: 'Basic Plugin Functionality', free: true, pro: true, team: true },
+  { name: 'Advanced Panel', free: false, pro: true, team: true, note: 'Custom controls & UI' },
+  { name: 'Email Support', free: false, pro: true, team: true },
+  { name: 'Multisite Support', free: false, pro: true, team: true },
+  { name: 'Team Access', free: false, pro: false, team: true, note: 'Up to 10 team members' },
+]
+
+const plans = {
+  free: { price: '$0' },
+  pro: {
+	/*
+    monthly: '$9/mo',
+    yearly: '$49/yr',
+	*/
+    onetime: '$149',
+  },
+  /*
+  team: {
+    monthly: '$29/mo',
+    yearly: '$299/yr',
+    onetime: '$699',
+  },
+  */
+}
+
 		return {
+			features,
+			plans,
 			product: {
 				id: 1,
 				name: "yyyyyyyy",
@@ -215,6 +263,7 @@ export default {
 			const product_info = computed(() => this.store.state.product.product);
 			watch(product_info, (newProduct) => {
 				this.product = newProduct;
+				this.plans.pro.onetime = `$${newProduct.price}`;
 
 			}, { immediate: true });
 			console.log(this.product);

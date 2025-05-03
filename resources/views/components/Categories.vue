@@ -51,10 +51,10 @@
                     <p class="text-gray-500 text-sm line-clamp-2 mb-2">{{ product.description }}</p>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-red-500 font-bold">¥{{ product.price }}</span>
+                        <span class="text-red-500 font-bold">${{ product.price }}</span>
                         <button @click="addToCart(product)"
                             class="text-sm bg-blue-100 text-blue-600 hover:bg-blue-200 px-2 py-1 rounded transition-colors">
-                            Buy
+                            Shopnow
                         </button>
                     </div>
                 </div>
@@ -183,8 +183,7 @@ const loadMore = () => {
 };
 
 const addToCart = (product) => {
-    console.log('add:', product);
-    alert(`${product.name} added to cart`);
+    location.href = '/products/' + product.uri
 };
 
 onMounted(() => {

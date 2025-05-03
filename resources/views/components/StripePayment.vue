@@ -21,6 +21,7 @@
   <script setup>
   import { ref, onMounted, onBeforeUnmount } from 'vue'
   import { loadStripe } from '@stripe/stripe-js'
+  import { useStore } from 'vuex'
   
   const props = defineProps({
     publishableKey: {
@@ -36,6 +37,7 @@
       required: true
     }
   })
+  const store = useStore()
   
   const emit = defineEmits(['payment-success', 'payment-error'])
   
@@ -89,6 +91,8 @@
   const submitPayment = async () => {
     if (processing.value) return
     
+    store.commit('setLoading', true);
+
     processing.value = true
     errorMessage.value = ''
     
