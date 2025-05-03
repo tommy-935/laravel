@@ -398,7 +398,6 @@ class CheckoutController extends Controller
                 'data' => []
             ]);
         }
-        error_log(print_r($order, true) . "\r\n", 3, '/Volumes/dev/www/debug.log');
 
         return response()->json([
             'success' => true,

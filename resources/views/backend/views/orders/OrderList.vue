@@ -13,9 +13,8 @@
 
       <Modal :show="showModal" @close="closeForm" width="960px">
         <OrderForm
-          :product="selectedProduct"
+          :id="id"
           @cancel="closeForm"
-          @submit="saveOrder"
         />
       </Modal>
     </div>
@@ -43,6 +42,8 @@
     { key: 'created_at', label: 'Added Date' }
   ]
 
+  const id = ref(0)
+
   const closeForm = () => {
     showModal.value = false
   }
@@ -57,6 +58,7 @@
   
   const editOrder = (order) => {
     // router.push(`/orders/${order.id}`)
+    id.value = parseInt(order.id)
     showModal.value = true
   }
 
