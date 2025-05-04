@@ -20,4 +20,9 @@ class ProductImg extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+    
+    public function attachment()
+    {
+        return $this->belongsTo(Attachment::class, 'attachment_id');
+    }
 }

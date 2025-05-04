@@ -13,4 +13,9 @@ class Attachment extends Model
         'uri',
         'type'
     ];
+
+    public function productImg()
+    {
+        return $this->hasMany(ProductImg::class, 'attachment_id', 'id');
+    }
 }

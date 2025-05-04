@@ -78,7 +78,7 @@ class CartController extends Controller
         }
 
         $uid = Auth::id() ? Auth::id() : 0;
-        $query = CartItem::with('product')
+        $query = CartItem::with('product.productImg.attachment:id,uri')
             ->leftjoin('product_detail', 'cart_items.product_id', '=', 'product_detail.product_id');
         
         if($uid){
