@@ -40,6 +40,8 @@ Route::get('/cookie-consent', [CookieConsentController::class, 'getConsent'])
 
 // Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
     
     Route::post('/cart', [CartController::class, 'viewCart'])->name('cart.view');
     

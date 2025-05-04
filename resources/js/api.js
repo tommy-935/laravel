@@ -45,6 +45,20 @@ export default {
               'Authorization': `Bearer ${getToken()}`
         }});
     },
+    removeCartItem: function(params){
+        return axios.post("/cart/remove", params, {
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${getToken()}`
+        }});
+    },
+    updateCartItem: function(params){
+        return axios.post("/cart/update", params, {
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${getToken()}`
+        }});
+    },
     getCart: function(params){
         return axios.post("/cart", params);
     },

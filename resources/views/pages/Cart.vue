@@ -2,6 +2,8 @@
 import Header from "../components/Header.vue";
 import Cart from "../components/Cart.vue";
 import Footer from "../components/Footer.vue";
+import Loading from "../components/Loading.vue";
+
 
 import {mapState, mapActions} from "vuex";
 export default {
@@ -12,7 +14,8 @@ export default {
     components: {
         Header,
         Cart,
-        Footer
+        Footer,
+        Loading
     },
     created(){
         this.getIndex();
@@ -29,4 +32,5 @@ export default {
     <Header />
     <Cart />
     <Footer />
+    <Loading />
 </template>

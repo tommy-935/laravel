@@ -55,7 +55,7 @@
 					</div>
 
 					<!-- Delete Button -->
-					<button class="text-red-500 hover:text-red-700" @click="removeItem(item.id)">
+					<button class="text-red-500 hover:text-red-700" @click="removeItem(item)">
 						<!-- Trash Icon -->
 						<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
 							stroke="currentColor" stroke-width="2">
@@ -70,7 +70,7 @@
 			<div class="w-full lg:w-[400px] shrink-0">
 				<div class="bg-white rounded-2xl p-6 shadow space-y-6">
 					<!-- Coupon Input -->
-					<div class="flex flex-col sm:flex-row sm:items-end gap-4">
+					<div v-if="false" class="flex flex-col sm:flex-row sm:items-end gap-4">
 						<div class="flex-1">
 							<label class="block mb-1 text-sm font-medium text-gray-700">Coupon Code</label>
 							<input v-model="couponCode" class="w-full border border-gray-300 rounded-lg px-4 py-2"
@@ -96,7 +96,7 @@
 						</div>
 						<div class="flex justify-between">
 							<span>Tax ({{ (taxRate * 100).toFixed(0) }}%)</span>
-							<span>¥{{ taxAmount }}</span>
+							<span>${{ taxAmount }}</span>
 						</div>
 						<hr />
 						<div class="flex justify-between text-lg font-semibold">
@@ -107,7 +107,7 @@
 
 					<!-- Checkout Button -->
 					<a href="/checkout"><button
-							class="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition">
+							class="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition cursor-pointer">
 							Proceed to Checkout
 						</button></a>
 				</div>
@@ -123,7 +123,7 @@ const store = useStore()
 const cart = ref({});
 const isCartLoaded = ref(false)
 // Login State
-const isLoggedIn = ref(false)
+const isLoggedIn = ref(true)
 const login = () => {
 	isLoggedIn.value = true
 	alert('You are now logged in.')
@@ -137,12 +137,26 @@ watch(cartItems, (newCart) => {
 
 }, { immediate: true });
 
-const increaseQuantity = (item) => item.quantity++
-const decreaseQuantity = (item) => { if (item.quantity > 1) item.quantity-- }
-const removeItem = (id) => {
-	cart.value = cart.value.filter(item => item.id !== id)
-	store.dispatch('removeCartItem', id)
-	store.dispatch('getCart');
+const increaseQuantity = (item) => { 
+	item.quantity++
+	tiggerUpdate(item)
+}
+const decreaseQuantity = (item) => { 
+	if (item.quantity > 1) {
+		item.quantity-- 
+		tiggerUpdate(item)
+	}
+}
+const tiggerUpdate = (item) => {
+	store.commit('setLoading', true);
+	store.dispatch('update', {item_key: item.item_key, quantity: item.quantity})
+};
+
+const removeItem = (item) => {
+	// loading
+	store.commit('setLoading', true);
+	store.dispatch('remove', {item_key: item.item_key})
+	// store.dispatch('getCart');
 	// store.dispatch('updateCart', cart.value)
 }
 const showQuantityControl = true

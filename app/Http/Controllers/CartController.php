@@ -105,28 +105,69 @@ class CartController extends Controller
     }
 
    
-    public function updateCart(Request $request, CartItem $cartItem)
+    public function updateCart(Request $request)
     {
-        $this->authorize('update', $cartItem);
-
         $request->validate([
+            'item_key' => 'required|string',
             'quantity' => 'required|integer|min:1'
         ]);
 
+        $item_key = $request->item_key;
+        if(!$item_key){
+            return response()->json([
+                'success' => false,
+                'message' => 'Item key is required',
+                'data' => []
+            ]);
+        }
+        // update cart item quantity
+        $cartItem = CartItem::where('item_key', $item_key)->first();    
+        if (!$cartItem) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+                'data' => []
+            ]);
+        }
         $cartItem->update([
             'quantity' => $request->quantity
         ]);
 
-        return redirect()->route('cart.view')->with('success', 'updated');
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => []
+        ]);
     }
 
     
-    public function removeFromCart(CartItem $cartItem)
+    public function removeFromCart(Request $request)
     {
-        $this->authorize('delete', $cartItem);
-
+        
+        $item_key = $request->item_key;
+        if(!$item_key){
+            return response()->json([
+                'success' => false,
+                'message' => 'Item key is required',
+                'data' => []
+            ]);
+        }
+        // delete cart item
+        $cartItem = CartItem::where('item_key', $item_key)->first();    
+        if (!$cartItem) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Item not found',
+                'data' => []
+            ]);
+        }
         $cartItem->delete();
 
-        return redirect()->route('cart.view')->with('success', 'removed');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => []
+        ]);
     }
 }
