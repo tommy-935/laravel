@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();  // Auto-incrementing id field
             $table->string('session_id', 125)->default('');  // session_id field
             $table->integer('user_id')->default(0);  // user_id field
+            $table->string('item_key', 125)->default('');
+
             $table->integer('product_id')->default(0);  // product_id field
             $table->integer('quantity')->default(0);  // quantity field
             $table->dateTime('expired_date')->nullable();  // expired_date field

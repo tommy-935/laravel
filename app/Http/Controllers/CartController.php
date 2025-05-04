@@ -33,6 +33,8 @@ class CartController extends Controller
 
         }
 
+        $item_key = Str::uuid();
+
         $cartItem = CartItem::where('user_id', Auth::id())
             ->where('product_id', $request->product_id)
             ->first();
@@ -44,6 +46,7 @@ class CartController extends Controller
             $uid = Auth::id() ? Auth::id() : 0;
             CartItem::create([
                 'session_id' => $cartUuid,
+                'item_key' => $item_key,
                 'user_id' => $uid,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity

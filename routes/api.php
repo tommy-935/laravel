@@ -10,6 +10,9 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RolesController;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +35,16 @@ Route::put('visits/{visit}', 'App\Http\Controllers\VisitsController@update');
 Route::delete('visits/{visit}', 'App\Http\Controllers\VisitsController@destroy');
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware([
+    EncryptCookies::class,
+    StartSession::class,
+  //  'throttle:api', // 暂时不需要限制API访问频率
+    AddQueuedCookiesToResponse::class,
+])->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
 Route::get('categories/{slug}', 'App\Http\Controllers\ProductController@getList');
 Route::get('products/{slug}', 'App\Http\Controllers\ProductController@get');

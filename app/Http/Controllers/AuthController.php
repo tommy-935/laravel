@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CartItem;
 
 
 class AuthController extends Controller
@@ -69,6 +70,16 @@ class AuthController extends Controller
         // Get user and create token
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
+        $cartUuid = $request->cookie('hash_uuid');
+
+        if ($cartUuid) {
+            // $user->cart()->updateOrCreate(['session_id' => $cartUuid], ['user_id' => $user->id]);
+            // $user->cart()->where(['session_id' => $cartUuid])->update(['user_id' => $user->id]);
+            CartItem::where('session_id', $cartUuid)
+            ->where('user_id', 0) // 确保是游客状态下的
+            ->update(['user_id' => $user->id]);
+
+        }
 
         return response()->json([
             'message' => 'Login successful!',

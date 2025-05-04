@@ -48,6 +48,7 @@ create table tb_cart_items(
 	id int(11) not null auto_increment,
 	session_id varchar(125) not null default "",
 	user_id int(11) not null default 0,
+	item_key varchar(125) not null default "",
 	product_id int(11) not null default 0,
 	quantity int(11) not null default 0,
 	expired_date datetime default null,
