@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getToken } from '_@/js/lib/common';
+import ForgotPassword from "../views/components/ForgotPassword.vue";
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
@@ -18,6 +19,12 @@ export default {
     },
     login: function(params){
         return axios.post("/api/login", params);
+    },
+    forgotPassword: function(params){
+        return axios.post("/api/forgot-password", params);
+    },
+    resetPassword: function(params){
+        return axios.post("/api/reset-password", params);
     },
     logout: function(params){
         return axios.post("/api/logout", params, {

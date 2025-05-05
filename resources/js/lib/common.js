@@ -21,3 +21,7 @@ export function goToCart () {
 export function goToCheckout () {
         window.location.href = '/checkout'
 };
+
+export function goToResetPassword () {
+        window.location.href = '/reset-password'
+};

@@ -86,8 +86,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const router = useRouter();
+const store = useStore();
 
 const name = ref('');
 const email = ref('');
@@ -101,14 +103,13 @@ const handleRegister = () => {
 		return;
 	}
 
-	// 真实情况：调用后端接口
-	console.log("Registering:", {
+	const form = {
 		name: name.value,
 		email: email.value,
-		password: password.value
-	});
-
-	alert("Registration successful!");
-	router.push('/login');
+		password: password.value,
+		password_confirmation: confirmPassword.value,
+	};
+	store.commit('setLoading', true);
+	store.dispatch('register', form)
 };
 </script>

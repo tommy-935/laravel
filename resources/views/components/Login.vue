@@ -47,3 +47,21 @@
 		</div>
 	</div>
 </template>
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const email = ref('');
+const password = ref('');
+
+const handleSubmit = () => {
+	const form = {
+		email: email.value,
+		password: password.value
+	};
+	store.commit('setLoading', true);
+	store.dispatch('login', form)
+};
+</script>

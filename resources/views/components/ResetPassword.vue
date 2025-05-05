@@ -48,9 +48,12 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const route = useRoute();
 const router = useRouter();
+const store = useStore();
+const { email } = router.currentRoute.value.query;
 
 const password = ref('');
 const confirmPassword = ref('');
@@ -62,12 +65,13 @@ const handleReset = () => {
 		return;
 	}
 
-	// 实际上这里会请求后端 API，传入 token 和新密码
-	console.log("Resetting password with token:", token);
-	console.log("New password:", password.value);
-
-	// 模拟成功后跳转
-	alert("Password reset successful.");
-	router.push('/login');
+	const form = {
+		email: email || '',
+        token: token,
+        password: password.value,
+        password_confirmation: confirmPassword.value
+	};
+	store.commit('setLoading', true);
+	store.dispatch('resetPassword', form)
 };
 </script>

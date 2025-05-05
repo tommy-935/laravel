@@ -36,14 +36,17 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const email = ref('');
 
 const handleSubmit = () => {
-	// 这里可以调用实际的重置密码接口
-	console.log('Reset link requested for:', email.value);
-
-	// 模拟提示
-	alert(`A reset link has been sent to ${email.value}`);
+	const form = {
+		email: email.value,
+	};
+	store.commit('setLoading', true);
+	store.dispatch('forgotPassword', form)
 };
 </script>
