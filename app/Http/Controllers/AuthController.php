@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CartItem;
+use Illuminate\Support\Facades\DB;
 
 
 class AuthController extends Controller
@@ -31,11 +32,23 @@ class AuthController extends Controller
         }
 
         // Create the user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try{
+            DB::transaction(function () use ($request, &$user) {
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+                $user->userRoles()->create([
+                    'user_id' => $user->id,
+                    'role_id' => 2, // Assuming 2 is the role ID for a regular user
+                ]);
+            });
+        }catch(\Exception $e){
+            return response()->json(['message' => 'Registration failed'], 500);
+        }
+        
+        
 
         // Generate authentication token
         $token = $user->createToken('auth_token')->plainTextToken;

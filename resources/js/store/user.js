@@ -16,7 +16,7 @@ export default {
         registerCallback(state, res) {
             console.log(res);
             store.commit("setLoading", false);
-            if (res.status == 200) {
+            if (res.status == 201) {
                 alert("Registration successful.");
                 goToLogin();
             }
