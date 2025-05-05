@@ -12,6 +12,8 @@ import PrivacyPolicy from "../views/pages/PrivacyPolicy.vue"
 import RefundPolicy from "../views/pages/RefundPolicy.vue"
 import TermsConditions from "../views/pages/TermsConditions.vue"
 import Aboutus from "../views/pages/Aboutus.vue"
+import ForgotPassword from '../views/pages/ForgotPassword.vue'
+import ResetPassword from '../views/pages/ResetPassword.vue'
 
 
 const routes = [
@@ -29,6 +31,16 @@ const routes = [
 		path: '/login',
 		name: 'Login',
 		component: Login
+	},
+	{
+		path: '/forgot-password',
+		name: 'ForgotPassword',
+		component: ForgotPassword
+	},
+	{
+		path: '/reset-password',
+		name: 'ResetPassword',
+		component: ResetPassword
 	},
 	{
 		path: '/categories/:slug',

@@ -142,7 +142,7 @@
 					</button>
 
 					<!-- Conditional rendering based on login state -->
-					<template v-if="isLoggedIn && false">
+					<template v-if="isLoggedIn">
 						<!-- User avatar dropdown -->
 						<div class="relative">
 							<div @mouseenter="openDropdown('user')" @mouseleave="startCloseTimer('user')"
@@ -169,10 +169,10 @@
 					</template>
 					<template v-else>
 						<!-- Login/Register buttons -->
-						<a v-if="false" href="#"
+						<a href="/login"
 							class="px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-green-600 hidden sm:block">Log
 							In</a>
-						<a v-if="false" href="#"
+						<a href="/register"
 							class="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md hidden sm:block">Sign
 							Up</a>
 					</template>
@@ -294,7 +294,7 @@ import { ref, computed } from 'vue';
 import CookieBanner from './CookieBanner.vue';
 
 // User state
-const isLoggedIn = ref(true);
+const isLoggedIn = ref(false);
 const user = ref({
 	name: 'John Doe',
 	email: 'john@example.com'
