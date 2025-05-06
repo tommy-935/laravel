@@ -89,6 +89,14 @@ const routes = [
 		name: 'Aboutus',
 		component: Aboutus
 	},
+	/*
+	 use views/frontend/account  
+	{	
+		path: '/account',
+		name: 'Account',
+		component: Account
+	},
+	*/
 ]
 
 const router = createRouter({

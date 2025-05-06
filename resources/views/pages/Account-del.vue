@@ -1,6 +1,6 @@
 <script>
 import Header from "../components/Header.vue";
-import Profile from "../components/Profile.vue";
+import Account from "../components/Account.vue";
 import Footer from "../components/Footer.vue";
 
 import {mapState, mapActions} from "vuex";
@@ -11,7 +11,7 @@ export default {
     },
     components: {
         Header,
-        Profile,
+        Account,
         Footer
     },
     created(){
@@ -27,6 +27,6 @@ export default {
 </script>
 <template>
     <Header />
-    <Profile />
+    <Account />
     <Footer />
 </template>
