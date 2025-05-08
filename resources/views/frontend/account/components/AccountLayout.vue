@@ -1,5 +1,7 @@
 <template>
-    <div class="max-w-7xl mx-auto p-4 sm:p-6">
+   <Header />
+    <!-- Main Layout -->
+   <div class="max-w-7xl mx-auto p-4 sm:p-6">
       <div class="grid grid-cols-1 md:grid-cols-[250px_1fr] gap-6">
         <!-- Sidebar -->
         <aside class="bg-white rounded-2xl shadow p-4 space-y-2">
@@ -23,9 +25,21 @@
         </section>
       </div>
     </div>
+    <Loading />
+    <Footer />
   </template>
   
   <script setup>
+import Header from "_@/views/components/Header.vue";
+import Footer from "_@/views/components/Footer.vue";
+import Loading from "_@/views/components/Loading.vue";
+
+const components = {
+  Header,
+  Footer,
+  Loading
+}
+
   const links = [
     { label: 'Profile', path: '/account/profile' },
     { label: 'Orders', path: '/account/orders' },

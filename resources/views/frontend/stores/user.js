@@ -8,12 +8,12 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async fetchUserProfile() {
-      const res = await axios.get('/api/user/profile')
-      this.profile = res.data
+      const res = await axios.post('/user/get-profile')
+      this.profile = res.data.data
     },
     async updateUserProfile(data) {
-      const res = await axios.put('/api/user/profile', data)
-      this.profile = res.data
+      const res = await axios.post('/user/update-profile', data)
+      return res.data
     }
   }
 })

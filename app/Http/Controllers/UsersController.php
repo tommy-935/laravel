@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+
 
 
 class UsersController extends Controller
@@ -159,6 +161,35 @@ class UsersController extends Controller
         ]);
     }
 
+
+    /**
+     * detail (GET /api/users/{id})
+     */
+    public function getProfile()
+    {
+        $id = Auth::id();
+        if(!$id){
+            return response()->json([
+                'success' => false,
+                'message' => 'id is not empty'
+            ], 422);
+        }
+        $user = User::select('id', 'name', 'email')->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'user not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $user
+        ]);
+    }
+
     /**
      * update (PUT/PATCH /api/users/{id})
      */
@@ -202,6 +233,58 @@ class UsersController extends Controller
                 'user_id' => $user->id,
                 'role_id' => $request->role_id,
             ]);
+
+        });
+        
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $user
+        ], 201);
+    }
+
+    /**
+     * update (PUT/PATCH /api/users/{id})
+     */
+    public function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+        ]);
+        $uid = Auth::id();
+        if(!$uid){
+            return response()->json([
+                'success' => false,
+                'message' => 'user not found'
+            ], 422);
+        }
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'verify failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        DB::transaction(function () use ($request, &$user, $uid) {
+            $user = User::where('id', $uid)->first();
+
+            if (! $user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'user not found'
+                ], 422);
+            }
+
+            $update_user = [
+                'name' => $request->name,
+            ];
+            
+
+            $user->update($update_user);
+
 
         });
         

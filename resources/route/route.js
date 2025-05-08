@@ -15,6 +15,7 @@ import Aboutus from "../views/pages/Aboutus.vue"
 import ForgotPassword from '../views/pages/ForgotPassword.vue'
 import ResetPassword from '../views/pages/ResetPassword.vue'
 
+import frontendRoutes from '../views/frontend/route/route'
 
 const routes = [
 	
@@ -97,6 +98,7 @@ const routes = [
 		component: Account
 	},
 	*/
+	...frontendRoutes
 ]
 
 const router = createRouter({

@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow">
+    <div class="max-w-md bg-white rounded-xl ">
       <h1 class="text-2xl font-bold mb-4">Change Password</h1>
   
       <form @submit.prevent="submit">

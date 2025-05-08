@@ -7,6 +7,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VisitsController;
 use App\Http\Controllers\CookieConsentController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\UsersController;
+
 
 /*
 Route::get('/', function () {
@@ -64,4 +66,10 @@ Route::get('/cookie-consent', [CookieConsentController::class, 'getConsent'])
     Route::post('/payment/paypal/webhook', [PaymentController::class, 'handlePayPalWebhook']);
     
     Route::post('/payment/stripe/webhook', [PaymentController::class, 'handleStripeWebhook']);
+
+    // user routes
+    Route::post('/user/get-profile', [UsersController::class, 'getProfile'])->name('users.getProfile');
+    Route::post('/user/update-profile', [UsersController::class, 'updateProfile'])->name('users.updateProfile');
+
+
 // });
