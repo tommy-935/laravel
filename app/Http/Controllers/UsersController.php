@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Order;
 
 
 
@@ -187,6 +188,34 @@ class UsersController extends Controller
             'success' => true,
             'message' => 'success',
             'data' => $user
+        ]);
+    }
+
+    public function getUserOrders(Request $request)
+    {
+        $uid = Auth::id();
+        if(!$uid){
+            return response()->json([
+                'success' => false,
+                'message' => 'id is not empty'
+            ], 422);
+        }
+        $orders = Order::with([
+            'orderUser:id,user_id,order_id',
+            'orderSoftToken:id,token,order_id',
+            'price:id,total,order_id'
+        ])
+        ->whereHas('orderUser', function ($query) use ($uid) {
+            $query->where('user_id', $uid);
+        })
+        ->select('id', 'order_key', 'order_num', 'created_at')
+        ->get();
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $orders
         ]);
     }
 

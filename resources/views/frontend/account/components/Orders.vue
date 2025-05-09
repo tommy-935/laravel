@@ -14,17 +14,17 @@
         >
           <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
             <div>
-              <p class="text-gray-700 font-semibold">Order #{{ order.id }}</p>
+              <p class="text-gray-700 font-semibold">Order #{{ order.order_num }}</p>
               <p class="text-sm text-gray-500">Placed on {{ formatDate(order.created_at) }}</p>
             </div>
             <div class="mt-2 sm:mt-0 text-sm text-gray-600">
-              Total: <span class="font-medium text-gray-800">${{ order.total }}</span>
+              Total: <span class="font-medium text-gray-800">${{ order.price.total }}</span>
             </div>
           </div>
   
           <div class="mt-4 text-right">
             <RouterLink
-              :to="`/account/orders/${order.id}`"
+              :to="`/account/orders/${order.order_key}`"
               class="text-blue-600 hover:underline text-sm font-medium"
             >
               View Details →
@@ -37,12 +37,15 @@
   
   <script setup>
   import { ref, onMounted } from 'vue'
-  import axios from 'axios'
+  import { useUserStore } from '_@/views/frontend/stores/user'
+  import { useStore } from 'vuex'
   
+  const userStore = useUserStore()
+  const store = useStore()
   const orders = ref([])
   
   const fetchOrders = async () => {
-    const res = await axios.get('/api/account/orders')
+    const res = await userStore.fetchUserOrders()
     orders.value = res.data
   }
   

@@ -14,6 +14,10 @@ export const useUserStore = defineStore('user', {
     async updateUserProfile(data) {
       const res = await axios.post('/user/update-profile', data)
       return res.data
-    }
+    },
+    async fetchUserOrders() {
+      const res = await axios.post('/user/get-orders')
+      return res.data
+    },
   }
 })
