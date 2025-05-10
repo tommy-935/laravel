@@ -42,8 +42,22 @@
         // import Test from "./../resources/views/components/Test.vue";
     </script>
     <script>
-    window.APP_USER = @json(['user_id' => Auth::id(), 'name' => Auth::user()->name, 'email' => Auth::user()->email]);
-    </script>
+    @php
+    $user = Auth::user()?->load('userRoles:id,user_id,role_id');
+    $appUser = $user ? [
+        'user_id' => $user->id,
+        'name'    => $user->name,
+        'email'   => $user->email,
+        'roles'   => $user->userRoles
+    ] : null;
+    @endphp
+  @if (Auth::check())
+    window.APP_USER = @json($appUser);
+  @else
+    window.APP_USER = null;
+  @endif
+</script>
+
     <body class="antialiased">
         
         <div id="app" class="app">

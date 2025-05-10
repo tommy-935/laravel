@@ -33,6 +33,7 @@ const routes = [
 		name: 'Login',
 		component: Login
 	},
+	
 	{
 		path: '/forgot-password',
 		name: 'ForgotPassword',
@@ -90,6 +91,11 @@ const routes = [
 		name: 'Aboutus',
 		component: Aboutus
 	},
+	{
+        path: '/404',
+        name: 'NotFound',
+        component: () => import('@/views/NotFound.vue')
+      },
 	/*
 	 use views/frontend/account  
 	{	

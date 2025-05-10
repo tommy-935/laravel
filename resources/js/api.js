@@ -20,6 +20,9 @@ export default {
     login: function(params){
         return axios.post("/api/login", params);
     },
+    admin_login: function(params){
+        return axios.post("/api/login", params);
+    },
     forgotPassword: function(params){
         return axios.post("/api/forgot-password", params);
     },

@@ -2,7 +2,7 @@ import api from "../api";
 import { inject } from "vue";
 import store from './store';
 import SecureStorage from '_@/js/utils/secureStorage';
-import { goToAdmin, goToLogin, goToResetPassword } from "../lib/common";
+import { goToAdmin, goToLogin, goToResetPassword, goToHome, goToAdminLogin } from "../lib/common";
 
 
 export default {
@@ -22,7 +22,16 @@ export default {
             }
         },
         loginCallback(state, res) {
-            console.log(res);
+            store.commit("setLoading", false);
+            // go to personal page
+            if (res.status == 200) {
+                const storage = new SecureStorage('app', 'custom-secret-key')
+                storage.set('token', res.data.token, 3600 * 24 * 3);
+                storage.set('name', res.data.user.name, 3600 * 24 * 3);
+                goToHome();
+            }
+        },
+        admin_loginCallback(state, res) {
             store.commit("setLoading", false);
             // go to personal page
             if (res.status == 200) {
@@ -57,6 +66,15 @@ export default {
                 storage.remove('token');
                 goToLogin();
             }
+        },
+        admin_logoutCallback(state, res) {
+            store.commit("setLoading", false);
+            // go to personal page
+            if (res.status == 200) {
+                const storage = new SecureStorage('app', 'custom-secret-key')
+                storage.remove('token');
+                goToAdminLogin();
+            }
         }
     },
     actions: {
@@ -83,6 +101,14 @@ export default {
                 store.commit("setLoading", false);
             });
         },
+        admin_login({ commit }, params) {
+            api.admin_login(params).then(function (res) {
+                commit("admin_loginCallback", res);
+            }).catch(error => {
+                alert(error.message);
+                store.commit("setLoading", false);
+            });
+        },
         forgotPassword({ commit }, params) {
             api.forgotPassword(params).then(function (res) {
                 commit("forgotPasswordCallback", res);
@@ -102,6 +128,11 @@ export default {
         logout({ commit }) {
             api.logout().then(function (res) {
                 commit("logoutCallback", res);
+            });
+        },
+        admin_logout({ commit }) {
+            api.logout().then(function (res) {
+                commit("admin_logoutCallback", res);
             });
         },
     }

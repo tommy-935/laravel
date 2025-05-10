@@ -58,8 +58,11 @@ Route::post('verify/license', 'App\Http\Controllers\Api\LicenseController@verify
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
 Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 
     // Route::post('/categories', [CategoryController::class, 'addToCart'])->name('cart.add');
     Route::apiResource('categories', CategoryController::class);

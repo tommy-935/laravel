@@ -8,15 +8,22 @@ export function getToken () {
 
 export function checkLogin (token) {
         const storage = new SecureStorage('app', 'custom-secret-key')
-        storage.set('token', token);
 }
 
 export function goToAdmin () {
         window.location.href = '/admin'
 };
 
+export function goToHome () {
+        window.location.href = '/'
+};
+
 export function goToLogin () {
         window.location.href = '/login'
+}
+
+export function goToAdminLogin () {
+        window.location.href = '/admin/login'
 }
 
 export function goToCart () {

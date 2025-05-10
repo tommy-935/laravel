@@ -157,11 +157,10 @@
 									@mouseleave="startCloseTimer('user')"
 									class="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100 transition-opacity duration-200"
 									:class="{ 'opacity-100': activeDropdown === 'user', 'opacity-0': activeDropdown !== 'user' }">
-									<a href="#"
+									<a href="/account/profile"
 										class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-									<a href="#"
-										class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-									<a href="#"
+									
+									<a href="javascript:void(0)" @click="logout"
 										class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</a>
 								</div>
 							</div>
@@ -293,9 +292,11 @@
 import { ref, computed } from 'vue';
 import CookieBanner from './CookieBanner.vue';
 import { useUserStore } from '_@/views/frontend/stores/user'
+import { useStore } from 'vuex';
 
 
 // User state
+const store = useStore();
 const isLoggedIn = ref(false);
 const user = ref({
 	name: 'John Doe',
@@ -370,6 +371,10 @@ const performSearch = () => {
 		// Implement your search logic here
 	}
 };
+
+const logout = () => {
+  store.dispatch('logout')
+}
 </script>
 
 <style scoped>

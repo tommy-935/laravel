@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
 
 const logout = () => {
   menuOpen.value = false
-  store.dispatch('logout')
+  store.dispatch('admin_logout')
 }
 </script>
 
