@@ -11,6 +11,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Order;
+use Illuminate\Support\Facades\Hash;
+
+
 
 
 
@@ -191,6 +194,39 @@ class UsersController extends Controller
         ]);
     }
 
+    public function getUserOrder(Request $request)
+    {
+        $uid = Auth::id();
+        $key = $request->input('key');
+        if(!$uid || !$key){
+            return response()->json([
+                'success' => false,
+                'message' => 'id is not empty'
+            ], 422);
+        }
+        $order = Order::with([
+            'orderUser:id,user_id,order_id,shipping_first_name,shipping_last_name,shipping_address1,shipping_address2,shipping_city,shipping_state,shipping_zip_code,shipping_country,shipping_phone,shipping_email,billing_address1,billing_address2,billing_city,billing_state,billing_zip_code,billing_country,billing_phone,billing_email,billing_first_name,billing_last_name',
+            'orderSoftToken:id,token,order_id',
+            'price:id,total,order_id',
+            'products.product.productImg.attachment:id,uri',
+            'products' => function ($query) {
+                $query->select('id', 'product_name', 'product_id', 'price', 'qty', 'item_price', 'order_id');
+            },
+        ])
+        ->whereHas('orderUser', function ($query) use ($uid, $key) {
+            $query->where('user_id', $uid)->where('order_key', $key);
+        })
+        ->select('id', 'order_key', 'order_num', 'created_at', 'status')
+        ->first();
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $order
+        ]);
+    }
+
     public function getUserOrders(Request $request)
     {
         $uid = Auth::id();
@@ -218,6 +254,40 @@ class UsersController extends Controller
             'data' => $orders
         ]);
     }
+
+    public function changePassword(Request $request)
+    {
+        $uid = Auth::id();
+        if (!$uid) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not authenticated'
+            ], 401);
+        }
+
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed', //  new_password_confirmation
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Current password is incorrect'
+            ], 422);
+        }
+
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password changed successfully'
+        ]);
+    }
+
 
     /**
      * update (PUT/PATCH /api/users/{id})

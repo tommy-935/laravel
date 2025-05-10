@@ -6,6 +6,11 @@ export function getToken () {
         return token ? token : null;
 };
 
+export function checkLogin (token) {
+        const storage = new SecureStorage('app', 'custom-secret-key')
+        storage.set('token', token);
+}
+
 export function goToAdmin () {
         window.location.href = '/admin'
 };

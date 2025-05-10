@@ -1,35 +1,37 @@
 <template>
     <div>
-      <h1 class="text-2xl font-bold mb-4">Order #{{ order.id }}</h1>
+      <h1 class="text-2xl font-bold mb-4">Order #{{ order.order_num }}</h1>
   
       <div class="bg-white rounded-lg p-6 shadow space-y-6">
         <!-- Order Info -->
         <div class="space-y-1 text-sm text-gray-600">
           <p><strong>Status:</strong> <span class="text-gray-800">{{ order.status }}</span></p>
           <p><strong>Placed on:</strong> {{ formatDate(order.created_at) }}</p>
-          <p><strong>Total:</strong> ${{ order.total }}</p>
+          <p><strong>Total:</strong> ${{ order.price.total }}</p>
         </div>
   
         <!-- Shipping Info -->
         <div>
           <h2 class="text-lg font-semibold mb-2">Shipping Information</h2>
           <p class="text-sm text-gray-700">
-            {{ order.shipping_name }}<br />
-            {{ order.shipping_address }}<br />
-            {{ order.shipping_phone }}
+            <p>{{ order.order_user.shipping_first_name }}</p>
+                <p>{{ order.order_user.shipping_address1 }}</p>
+                <p>{{ order.order_user.shipping_city }}, {{ order.order_user.shipping_state }} {{ order.order_user.shipping_zip_ode }}</p>
+                <p>{{ order.order_user.shipping_country }}</p>
+                <p class="mt-2">Phone: {{ order.order_user.shipping_phone }}</p>
           </p>
         </div>
   
         <!-- Items -->
         <div>
           <h2 class="text-lg font-semibold mb-2">Items</h2>
-          <div v-for="item in order.items" :key="item.id" class="flex items-center gap-4 border-t py-4">
-            <img :src="item.image" class="w-16 h-16 object-cover rounded-lg" />
+          <div v-for="item in order.products" :key="item.id" class="flex items-center gap-4 border-t py-4">
+            <img :src="'/storage/' + item.product.product_img[0].attachment.uri" class="w-16 h-16 object-cover rounded-lg" />
             <div class="flex-1">
-              <p class="text-sm font-medium text-gray-800">{{ item.name }}</p>
-              <p class="text-sm text-gray-500">Qty: {{ item.quantity }}</p>
+              <p class="text-sm font-medium text-gray-800">{{ item.product_name }}</p>
+              <p class="text-sm text-gray-500">Qty: {{ item.qty }}</p>
             </div>
-            <div class="text-sm font-semibold text-gray-700">${{ item.total_price }}</div>
+            <div class="text-sm font-semibold text-gray-700">${{ item.item_price }}</div>
           </div>
         </div>
       </div>
@@ -46,13 +48,16 @@
   <script setup>
   import { ref, onMounted } from 'vue'
   import { useRoute } from 'vue-router'
-  import axios from 'axios'
+  import { useUserStore } from '_@/views/frontend/stores/user'
+  import { useStore } from 'vuex'
   
   const route = useRoute()
-  const order = ref({ id: '', items: [] })
+  const userStore = useUserStore()
+  const store = useStore()
+  const order = ref({ id: '', products: [], price: {}, order_user: {} })
   
   const fetchOrderDetail = async () => {
-    const res = await axios.get(`/api/account/orders/${route.params.id}`)
+    const res = await userStore.fetchUserOrder({ key: route.params.key })
     order.value = res.data
   }
   

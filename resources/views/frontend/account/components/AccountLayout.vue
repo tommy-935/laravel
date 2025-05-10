@@ -43,8 +43,8 @@ const components = {
   const links = [
     { label: 'Profile', path: '/account/profile' },
     { label: 'Orders', path: '/account/orders' },
-    { label: 'Addresses', path: '/account/addresses' },
-    { label: 'Notifications', path: '/account/notifications' },
+  //  { label: 'Addresses', path: '/account/addresses' },
+  //  { label: 'Notifications', path: '/account/notifications' },
     { label: 'Change Password', path: '/account/password' }
   ]
   </script>

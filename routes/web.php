@@ -71,6 +71,8 @@ Route::get('/cookie-consent', [CookieConsentController::class, 'getConsent'])
     Route::post('/user/get-profile', [UsersController::class, 'getProfile'])->name('users.getProfile');
     Route::post('/user/update-profile', [UsersController::class, 'updateProfile'])->name('users.updateProfile');
     Route::post('/user/get-orders', [UsersController::class, 'getUserOrders'])->name('users.getUserOrders');
+    Route::post('/user/get-order', [UsersController::class, 'getUserOrder'])->name('users.getUserOrder');
+    Route::post('/user/change-password', [UsersController::class, 'changePassword'])->name('users.changePassword');
 
 
 

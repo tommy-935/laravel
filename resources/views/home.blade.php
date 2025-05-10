@@ -31,6 +31,8 @@
                         ? 'true' : 'false' 
                 }}
             });
+
+            
         </script>
     @endif
     
@@ -38,6 +40,9 @@
     </head>
     <script type="module">
         // import Test from "./../resources/views/components/Test.vue";
+    </script>
+    <script>
+    window.APP_USER = @json(['user_id' => Auth::id(), 'name' => Auth::user()->name, 'email' => Auth::user()->email]);
     </script>
     <body class="antialiased">
         

@@ -292,6 +292,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import CookieBanner from './CookieBanner.vue';
+import { useUserStore } from '_@/views/frontend/stores/user'
+
 
 // User state
 const isLoggedIn = ref(false);
@@ -299,6 +301,14 @@ const user = ref({
 	name: 'John Doe',
 	email: 'john@example.com'
 });
+
+const userStore = useUserStore();
+if (window.APP_USER) {
+  userStore.user = window.APP_USER;
+  userStore.isLoggedIn = true;
+  isLoggedIn.value = true;
+  user.value = userStore.user;
+}
 
 // UI state
 const activeDropdown = ref(null);

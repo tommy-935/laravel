@@ -34,12 +34,12 @@
           <div>
             <label class="block text-sm font-medium mb-1">Confirm New Password</label>
             <input
-              v-model="form.confirm_password"
+              v-model="form.new_password_confirmation"
               type="password"
               class="w-full border border-gray-300 rounded-lg px-4 py-2"
             />
-            <p v-if="errors.confirm_password" class="text-sm text-red-500 mt-1">
-              {{ errors.confirm_password }}
+            <p v-if="errors.new_password_confirmation" class="text-sm text-red-500 mt-1">
+              {{ errors.new_password_confirmation }}
             </p>
           </div>
   
@@ -61,11 +61,15 @@
   <script setup>
   import { ref } from 'vue'
   import axios from 'axios'
+  import { useUserStore } from '_@/views/frontend/stores/user'
+  import { useStore } from 'vuex'
   
+  const userStore = useUserStore()
+  const store = useStore()
   const form = ref({
     current_password: '',
     new_password: '',
-    confirm_password: ''
+    new_password_confirmation: ''
   })
   
   const errors = ref({})
@@ -75,15 +79,15 @@
     errors.value = {}
     successMessage.value = ''
   
-    if (form.value.new_password !== form.value.confirm_password) {
-      errors.value.confirm_password = 'Passwords do not match'
+    if (form.value.new_password !== form.value.new_password_confirmation) {
+      errors.value.new_password_confirmation = 'Passwords do not match'
       return
     }
   
     try {
-      await axios.post('/api/account/change-password', form.value)
+      const res = await userStore.changePassword(form.value)
       successMessage.value = 'Password updated successfully'
-      form.value = { current_password: '', new_password: '', confirm_password: '' }
+      form.value = { current_password: '', new_password: '', new_password_confirmation: '' }
     } catch (err) {
       if (err.response && err.response.data.errors) {
         errors.value = err.response.data.errors

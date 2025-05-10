@@ -1,10 +1,13 @@
 // stores/user.js
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import ChangePassword from '../account/components/ChangePassword.vue'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    profile: null
+    profile: null,
+    user: null,
+    isLoggedIn: false,
   }),
   actions: {
     async fetchUserProfile() {
@@ -17,6 +20,14 @@ export const useUserStore = defineStore('user', {
     },
     async fetchUserOrders() {
       const res = await axios.post('/user/get-orders')
+      return res.data
+    },
+    async fetchUserOrder(data) {
+      const res = await axios.post('/user/get-order', data)
+      return res.data
+    },
+    async changePassword(data) {
+      const res = await axios.post('/user/change-password', data)
       return res.data
     },
   }
